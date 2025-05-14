@@ -29,9 +29,9 @@ app.post('/api/leave_requests', async (req, res) => {
       VALUES (${employee_id}, ${start_date}, ${end_date}, ${reason}, ${status});
     `;
     res.status(201).send('Leave request submitted');
-  } catch (err) {
-    console.error('DB Insert Error:', err);
-    res.status(500).send('Server error');
+    } catch (err) {
+    console.error('DB Insert Error:', err.message);         // log error message to terminal
+    res.status(500).json({ error: err.message });           // send error to frontend as JSON
   }
 });
 
