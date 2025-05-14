@@ -101,6 +101,27 @@ app.post('/api/attendance', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+// ✅ GET - Fetch attendance logs by employee ID
+app.get('/api/attendance', async (req, res) => {
+  const emp_id = req.query.emp_id;
+
+  if (!emp_id) return res.status(400).send('Missing emp_id');
+
+  try {
+    await sql.connect(config);
+    const result = await sql.query`
+      SELECT * FROM attendance_logs
+      WHERE employee_id = ${emp_id}
+      ORDER BY log_time DESC;
+    `;
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error('Select error:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 // ✅ Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));

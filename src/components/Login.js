@@ -11,7 +11,13 @@ const Login = () => {
     if (username.trim()) {
       localStorage.setItem('username', username);
       localStorage.setItem('role', role);
-      navigate('/dashboard');
+
+      // ✅ Navigate based on role
+      if (role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     }
   };
 
@@ -26,12 +32,11 @@ const Login = () => {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
-
-
         <br />
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="employee">Employee</option>
           <option value="manager">Manager</option>
+          <option value="admin">Admin</option> {/* ✅ Added */}
         </select>
         <br />
         <button type="submit">Login</button>
