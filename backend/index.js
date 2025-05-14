@@ -1,21 +1,23 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-// ✅ Enable CORS with custom settings for Vercel frontend
+const app = express();
+
+// ✅ FIX: Enable CORS for your Vercel frontend
 app.use(cors({
-  origin: 'https://attendance-tracker-lac.vercel.app', // Replace with actual deployed Vercel URL
-  methods: ['GET', 'POST'],
+  origin: 'https://attendance-tracker-lac.vercel.app', // 👈 your Vercel frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
+// ✅ Middleware for JSON parsing
 app.use(bodyParser.json());
 
-// Simulated DB
+// ✅ Temporary in-memory array (you may replace this with DB later)
 let leaveRequests = [];
 
-// POST - Submit leave request
+// ✅ POST - Submit a leave request
 app.post('/api/leave_requests', (req, res) => {
   const { employee_id, start_date, end_date, reason, status } = req.body;
 
@@ -25,37 +27,35 @@ app.post('/api/leave_requests', (req, res) => {
 
   const newRequest = { employee_id, start_date, end_date, reason, status };
   leaveRequests.push(newRequest);
-
   res.status(201).send('Leave request submitted');
 });
 
-// GET - Retrieve all leave requests (with ID for each)
+// ✅ GET - Get all leave requests
 app.get('/api/leave_requests', (req, res) => {
-  const requestsWithIds = leaveRequests.map((request, index) => ({
-    id: index,
-    ...request
+  const requestsWithIds = leaveRequests.map((req, idx) => ({
+    id: idx,
+    ...req
   }));
   res.status(200).json(requestsWithIds);
 });
 
-// PUT - Approve or Reject a leave request
+// ✅ PUT - Manager updates status
 app.put('/api/leave_requests/:id', (req, res) => {
-  const requestId = parseInt(req.params.id);
+  const id = parseInt(req.params.id);
   const { status } = req.body;
 
-  if (!status || !['approved', 'rejected'].includes(status)) {
+  if (!['approved', 'rejected'].includes(status)) {
     return res.status(400).send('Invalid status');
   }
 
-  if (!leaveRequests[requestId]) {
-    return res.status(404).send('Leave request not found');
+  if (!leaveRequests[id]) {
+    return res.status(404).send('Request not found');
   }
 
-  leaveRequests[requestId].status = status;
-  res.status(200).send('Leave request status updated');
+  leaveRequests[id].status = status;
+  res.status(200).send('Status updated');
 });
 
-
-// Start the server
+// ✅ Start the server
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen(port, () => console.log(`Server running on port ${port}`));
