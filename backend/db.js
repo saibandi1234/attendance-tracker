@@ -1,10 +1,7 @@
-// db.js
-const sql = require('mssql');
-
 const config = {
-  user: 'SA',
-  password: 'YourStrong!Passw0rd',
-  server: '20.83.176.127',  // Your VM's public IP
+  user: 'sa',
+  password: 'MySecretPassw0rd!',
+  server: '20.83.176.127',
   database: 'attendance_db',
   port: 1433,
   options: {
@@ -12,5 +9,3 @@ const config = {
     trustServerCertificate: true
   }
 };
-
-module.exports = { sql, config };
