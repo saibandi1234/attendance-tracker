@@ -81,6 +81,26 @@ app.put('/api/leave_requests/:id', async (req, res) => {
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/api/admin', adminRoutes);
 
+// ✅ POST - Log attendance entry to SQL Server
+app.post('/api/attendance', async (req, res) => {
+  const { employee_id, log_time, status } = req.body;
+
+  if (!employee_id || !log_time || !status) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  try {
+    await sql.connect(config);
+    await sql.query`
+      INSERT INTO attendance_logs (employee_id, log_time, status)
+      VALUES (${employee_id}, ${log_time}, ${status});
+    `;
+    res.status(201).send('Attendance logged');
+  } catch (err) {
+    console.error('Insert error:', err);
+    res.status(500).send('Server error');
+  }
+});
 // ✅ Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
