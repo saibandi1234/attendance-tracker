@@ -5,16 +5,16 @@ const Dashboard = () => {
   const role = localStorage.getItem('role');
   const [leaveRequests, setLeaveRequests] = useState([]);
 
-  const fetchLeaveRequests = async () => {
-    try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
-      const data = await response.json();
-      setLeaveRequests(data);
-console.log("Fetched leave requests:", data);
-    } catch (error) {
-      console.error('Error fetching leave requests:', error);
-    }
-  };
+const fetchLeaveRequests = async () => {
+  try {
+    const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
+    const data = await response.json();
+    console.log("Fetched leave requests:", data); // 👈 add this
+    setLeaveRequests(data);
+  } catch (error) {
+    console.error('Error fetching leave requests:', error);
+  }
+};
 
   useEffect(() => {
     fetchLeaveRequests();
