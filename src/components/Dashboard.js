@@ -1,101 +1,105 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-function Dashboard() {
-  const [formData, setFormData] = useState({
-    employee_id: '',
-    start_date: '',
-    end_date: '',
-    reason: '',
-    status: 'pending',
-  });
-
+const Dashboard = () => {
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
   const [leaveRequests, setLeaveRequests] = useState([]);
-  const [message, setMessage] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setMessage('Leave request submitted successfully');
-        fetchLeaveRequests(); // Refresh the table
-      } else {
-        setMessage('Failed to submit leave request');
-      }
-    } catch (error) {
-      setMessage('Server error');
-    }
-  };
 
   const fetchLeaveRequests = async () => {
-    try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
-      const data = await response.json();
-      setLeaveRequests(data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+    const response = await fetch('http://20.83.176.127:3000/api/leave_requests');
+    const data = await response.json();
+    setLeaveRequests(data);
   };
 
   useEffect(() => {
     fetchLeaveRequests();
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const newRequest = {
+      employee_id: username,
+      start_date: form.start_date.value,
+      end_date: form.end_date.value,
+      reason: form.reason.value,
+      status: 'pending'
+    };
+
+    await fetch('http://20.83.176.127:3000/api/leave_requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newRequest),
+    });
+
+    fetchLeaveRequests();
+    form.reset();
+  };
+
+  const handleStatusUpdate = async (id, status) => {
+    await fetch(`http://20.83.176.127:3000/api/leave_requests/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    fetchLeaveRequests();
+  };
+
   return (
     <div>
-      <h2>Submit Leave Request</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="employee_id" placeholder="Employee ID" onChange={handleChange} /><br /><br />
-        <input type="date" name="start_date" onChange={handleChange} /><br /><br />
-        <input type="date" name="end_date" onChange={handleChange} /><br /><br />
-        <input type="text" name="reason" placeholder="Reason" onChange={handleChange} /><br /><br />
-        <select name="status" onChange={handleChange}>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-        </select><br /><br />
-        <button type="submit">Submit</button>
-      </form>
-      <p>{message}</p>
+      <h3>Welcome, {username} ({role})</h3>
+      <a href="/">Logout</a>
 
-      <h3>All Leave Requests</h3>
-      <table border="1" cellPadding="6">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Employee ID</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Reason</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {leaveRequests.map((leave) => (
-            <tr key={leave.id}>
-              <td>{leave.id}</td>
-              <td>{leave.employee_id}</td>
-              <td>{leave.start_date}</td>
-              <td>{leave.end_date}</td>
-              <td>{leave.reason}</td>
-              <td>{leave.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Employee View */}
+      {role === 'employee' && (
+        <form onSubmit={handleSubmit}>
+          <h4>Submit Leave Request</h4>
+          <input name="start_date" type="date" required />
+          <input name="end_date" type="date" required />
+          <input name="reason" placeholder="Reason" required />
+          <button type="submit">Submit</button>
+        </form>
+      )}
+
+      {/* Manager View */}
+      {role === 'manager' && (
+        <>
+          <h4>Pending Leave Requests</h4>
+          <table border="1" cellPadding="6">
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaveRequests.map((req) => (
+                <tr key={req.id}>
+                  <td>{req.employee_id}</td>
+                  <td>{req.start_date}</td>
+                  <td>{req.end_date}</td>
+                  <td>{req.reason}</td>
+                  <td>{req.status}</td>
+                  <td>
+                    {req.status === 'pending' && (
+                      <>
+                        <button onClick={() => handleStatusUpdate(req.id, 'approved')}>Approve</button>{' '}
+                        <button onClick={() => handleStatusUpdate(req.id, 'rejected')}>Reject</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default Dashboard;
