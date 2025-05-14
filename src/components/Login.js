@@ -20,12 +20,14 @@ const Login = () => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="text"
-          placeholder="Enter username"
+          type="number"
+          placeholder="Enter your Employee ID (numeric only)"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+
+
         <br />
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="employee">Employee</option>

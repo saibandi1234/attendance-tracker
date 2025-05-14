@@ -23,7 +23,7 @@ const Dashboard = () => {
     e.preventDefault();
     const form = e.target;
     const newRequest = {
-      employee_id: username,
+      employee_id: parseInt(username),
       start_date: form.start_date.value,
       end_date: form.end_date.value,
       reason: form.reason.value,
