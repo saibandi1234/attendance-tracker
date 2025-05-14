@@ -50,20 +50,31 @@ app.get('/api/leave_requests', async (req, res) => {
 // 🔁 PUT route (still using in-memory logic if needed for now)
 let leaveRequests = []; // ⚠️ Remove this once PUT is converted to SQL
 
-app.put('/api/leave_requests/:id', (req, res) => {
-  const id = parseInt(req.params.id);
+app.put('/api/leave_requests/:id', async (req, res) => {
+  const leave_id = parseInt(req.params.id);
   const { status } = req.body;
 
   if (!['approved', 'rejected'].includes(status)) {
     return res.status(400).send('Invalid status');
   }
 
-  if (!leaveRequests[id]) {
-    return res.status(404).send('Request not found');
-  }
+  try {
+    await sql.connect(config);
+    const result = await sql.query`
+      UPDATE leave_requests
+      SET status = ${status}
+      WHERE leave_id = ${leave_id};
+    `;
 
-  leaveRequests[id].status = status;
-  res.status(200).send('Status updated');
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).send('Leave request not found');
+    }
+
+    res.status(200).send('Status updated');
+  } catch (err) {
+    console.error('Update error:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 // ✅ Admin routes
