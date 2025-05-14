@@ -1,9 +1,7 @@
-const sql = require('mssql');
-
 const config = {
   user: 'sa',
-  password: 'MySecretPassw0rd!', // your verified SA password
-  server: '20.83.176.127',       // your VM public IP
+  password: 'StrongPassw0rd123!',
+  server: '20.83.176.127',
   database: 'attendance_db',
   port: 1433,
   options: {
