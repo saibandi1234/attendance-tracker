@@ -50,7 +50,10 @@ app.post('/api/leave_requests', async (req, res) => {
 app.get('/api/leave_requests', async (req, res) => {
   try {
     await sql.connect(config);
-    const result = await sql.query`SELECT * FROM leave_requests`;
+    const result = await sql.query`
+      SELECT leave_id, employee_id, start_date, end_date, reason, status
+      FROM leave_requests
+    `;
     res.status(200).json(result.recordset);
   } catch (err) {
     console.error('DB Select Error:', err);
@@ -112,22 +115,17 @@ app.post('/api/attendance', async (req, res) => {
   }
 });
 
-// ✅ GET - Fetch attendance logs by employee ID
-app.get('/api/attendance', async (req, res) => {
-  const emp_id = req.query.emp_id;
-
-  if (!emp_id) return res.status(400).send('Missing emp_id');
-
+app.get('/api/leave_requests', async (req, res) => {
   try {
     await sql.connect(config);
     const result = await sql.query`
-      SELECT * FROM attendance_logs
-      WHERE employee_id = ${emp_id}
-      ORDER BY log_time DESC;
+      SELECT leave_id, employee_id, start_date, end_date, reason, status
+      FROM leave_requests
+      ORDER BY leave_id DESC;
     `;
     res.status(200).json(result.recordset);
   } catch (err) {
-    console.error('Select error:', err);
+    console.error('DB Select Error:', err);
     res.status(500).send('Server error');
   }
 });

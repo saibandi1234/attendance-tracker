@@ -90,30 +90,6 @@ const fetchAttendanceLogs = async () => {
   };
 
   return (
-{role === 'employee' && (
-  <>
-    <h4>Your Attendance Logs</h4>
-    <table border="1" cellPadding="6">
-      <thead>
-        <tr>
-          <th>Log ID</th>
-          <th>Time</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {attendanceLogs.map(log => (
-          <tr key={log.log_id}>
-            <td>{log.log_id}</td>
-            <td>{new Date(log.log_time).toLocaleString()}</td>
-            <td>{log.status}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </>
-)}
-
     <div>
       <h3>Welcome, {username} ({role})</h3>
       <a href="/">Logout</a>
