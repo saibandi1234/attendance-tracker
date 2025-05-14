@@ -57,28 +57,10 @@ function Dashboard() {
     <div>
       <h2>Submit Leave Request</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="employee_id"
-          placeholder="Employee ID"
-          onChange={handleChange}
-        /><br /><br />
-        <input
-          type="date"
-          name="start_date"
-          onChange={handleChange}
-        /><br /><br />
-        <input
-          type="date"
-          name="end_date"
-          onChange={handleChange}
-        /><br /><br />
-        <input
-          type="text"
-          name="reason"
-          placeholder="Reason"
-          onChange={handleChange}
-        /><br /><br />
+        <input type="text" name="employee_id" placeholder="Employee ID" onChange={handleChange} /><br /><br />
+        <input type="date" name="start_date" onChange={handleChange} /><br /><br />
+        <input type="date" name="end_date" onChange={handleChange} /><br /><br />
+        <input type="text" name="reason" placeholder="Reason" onChange={handleChange} /><br /><br />
         <select name="status" onChange={handleChange}>
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
