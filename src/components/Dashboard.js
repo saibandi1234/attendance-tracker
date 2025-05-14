@@ -30,6 +30,9 @@ const Dashboard = () => {
       status: 'pending',
     };
 
+    console.log("Submitting leave request:", newRequest);
+
+
     try {
       const response = await fetch('http://20.83.176.127:3000/api/leave_requests', {
         method: 'POST',
