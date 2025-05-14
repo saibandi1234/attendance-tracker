@@ -8,9 +8,11 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem('username', username);
-    localStorage.setItem('role', role);
-    navigate('/dashboard');
+    if (username.trim()) {
+      localStorage.setItem('username', username);
+      localStorage.setItem('role', role);
+      navigate('/dashboard');
+    }
   };
 
   return (
