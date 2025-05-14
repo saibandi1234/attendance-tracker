@@ -1,4 +1,6 @@
-const sql = require('mssql'); // ✅ this is missing
+const sql = require('mssql');
+
+const config = {
   user: 'sa',
   password: 'StrongPassw0rd123!',
   server: '20.83.176.127',
@@ -10,4 +12,4 @@ const sql = require('mssql'); // ✅ this is missing
   }
 };
 
-module.exports = { sql, config }; // ✅ export both
+module.exports = { sql, config };
