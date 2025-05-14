@@ -48,7 +48,6 @@ app.get('/api/leave_requests', async (req, res) => {
 });
 
 // 🔁 PUT route (still using in-memory logic if needed for now)
-let leaveRequests = []; // ⚠️ Remove this once PUT is converted to SQL
 
 app.put('/api/leave_requests/:id', async (req, res) => {
   const leave_id = parseInt(req.params.id);
