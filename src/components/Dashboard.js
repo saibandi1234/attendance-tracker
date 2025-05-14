@@ -6,9 +6,13 @@ const Dashboard = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
 
   const fetchLeaveRequests = async () => {
-    const response = await fetch('http://20.83.176.127:3000/api/leave_requests');
-    const data = await response.json();
-    setLeaveRequests(data);
+    try {
+      const response = await fetch('http://20.83.176.127:3000/api/leave_requests');
+      const data = await response.json();
+      setLeaveRequests(data);
+    } catch (error) {
+      console.error('Error fetching leave requests:', error);
+    }
   };
 
   useEffect(() => {
@@ -23,26 +27,40 @@ const Dashboard = () => {
       start_date: form.start_date.value,
       end_date: form.end_date.value,
       reason: form.reason.value,
-      status: 'pending'
+      status: 'pending',
     };
 
-    await fetch('http://20.83.176.127:3000/api/leave_requests', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newRequest),
-    });
+    try {
+      const response = await fetch('http://20.83.176.127:3000/api/leave_requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRequest),
+      });
 
-    fetchLeaveRequests();
-    form.reset();
+      if (!response.ok) {
+        throw new Error('Failed to submit request');
+      }
+
+      alert('Leave request submitted successfully!');
+      fetchLeaveRequests();
+      form.reset();
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('Error submitting leave request');
+    }
   };
 
   const handleStatusUpdate = async (id, status) => {
-    await fetch(`http://20.83.176.127:3000/api/leave_requests/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-    fetchLeaveRequests();
+    try {
+      await fetch(`http://20.83.176.127:3000/api/leave_requests/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      fetchLeaveRequests();
+    } catch (error) {
+      console.error('Error updating request:', error);
+    }
   };
 
   return (
@@ -54,9 +72,16 @@ const Dashboard = () => {
       {role === 'employee' && (
         <form onSubmit={handleSubmit}>
           <h4>Submit Leave Request</h4>
-          <input name="start_date" type="date" required />
-          <input name="end_date" type="date" required />
-          <input name="reason" placeholder="Reason" required />
+
+          <label>Start Date:</label><br />
+          <input name="start_date" type="date" required /><br /><br />
+
+          <label>End Date:</label><br />
+          <input name="end_date" type="date" required /><br /><br />
+
+          <label>Reason:</label><br />
+          <input name="reason" type="text" placeholder="Reason for leave" required /><br /><br />
+
           <button type="submit">Submit</button>
         </form>
       )}
