@@ -98,54 +98,43 @@ const Dashboard = () => {
         </form>
       )}
 
-      {/* Manager View */}
-      {role === 'manager' && (
-        <>
-          <h4>Pending Leave Requests</h4>
-          <table border="1" cellPadding="6">
-            <thead>
-              <tr>
-                <th>Employee ID</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Reason</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-             {leaveRequests.map((req) => {
-             console.log("Rendering leave request:", req); // ✅ ADD THIS
-             return (
-              <tr key={req.leave_id}>
+{/* Manager View */}
+{role === 'manager' && (
+  <>
+    <h4>Pending Leave Requests</h4>
+    <table border="1" cellPadding="6">
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {leaveRequests.map((req) => {
+          console.log("Rendering row:", req); // ✅ good for debugging
+          return (
+            <tr key={req.leave_id}>
               <td>{req.employee_id}</td>
-              ...
-
-                console.log("Rendering row:", req); // helpful for debugging
-                return (
-                  <tr key={req.leave_id}>
-                    <td>{req.employee_id}</td>
-                    <td>{req.start_date}</td>
-                    <td>{req.end_date}</td>
-                    <td>{req.reason}</td>
-                    <td>{req.status}</td>
-                    <td>
-                      {req.status === 'pending' && (
-                        <>
-                          <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
-                          <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </>
-      )}
-    </div>
-  );
-};
-
-export default Dashboard;
+              <td>{req.start_date}</td>
+              <td>{req.end_date}</td>
+              <td>{req.reason}</td>
+              <td>{req.status}</td>
+              <td>
+                {req.status === 'pending' && (
+                  <>
+                    <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
+                    <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
+                  </>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </>
+)}
