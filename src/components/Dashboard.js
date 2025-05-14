@@ -53,19 +53,29 @@ const Dashboard = () => {
     }
   };
 
-  const handleStatusUpdate = async (id, status) => {
-    try {
-      await fetch(`https://attendance-backend-vcna.onrender.com/api/leave_requests/${id}`, {
+const handleStatusUpdate = async (leave_id, status) => {
+  console.log("Updating leave_id:", leave_id, "Status:", status);
+
+  try {
+    const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/leave_requests/${leave_id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ status }),
     });
 
-      fetchLeaveRequests();
-    } catch (error) {
-      console.error('Error updating request:', error);
+    if (!res.ok) {
+      throw new Error('Failed to update');
     }
-  };
+
+    alert('Leave request updated successfully');
+    fetchLeaveRequests();
+  } catch (error) {
+    console.error('Error updating request:', error);
+    alert('Error updating leave request');
+  }
+};
 
   return (
     <div>
@@ -106,24 +116,22 @@ const Dashboard = () => {
         </tr>
       </thead>
       <tbody>
-        {leaveRequests.map((req) => (
-          <tr key={req.leave_id}>
-            <td>{req.employee_id}</td>
-            <td>{req.start_date}</td>
-            <td>{req.end_date}</td>
-            <td>{req.reason}</td>
-            <td>{req.status}</td>
-            <td>
-              {req.status === 'pending' && (
-                <>
-                  <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
-                  <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
-                </>
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </>
-)}
+  {leaveRequests.map((req) => (
+    <tr key={req.leave_id}>
+      <td>{req.employee_id}</td>
+      <td>{req.start_date}</td>
+      <td>{req.end_date}</td>
+      <td>{req.reason}</td>
+      <td>{req.status}</td>
+      <td>
+        {req.status === 'pending' && (
+          <>
+            <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
+            <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
+          </>
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
