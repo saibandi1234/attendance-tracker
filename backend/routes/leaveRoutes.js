@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-// Sample GET route for leave requests
-router.get('/', (req, res) => {
-  res.json([
-    { id: 1, employee_id: 'E001', start_date: '2025-05-01', end_date: '2025-05-05', reason: 'Sick', status: 'approved' },
-    { id: 2, employee_id: 'E002', start_date: '2025-05-10', end_date: '2025-05-12', reason: 'Vacation', status: 'pending' },
-  ]);
+// Simulate leave requests
+let leaveRequests = [];
+
+router.post('/leave_requests', (req, res) => {
+  const { employee_id, start_date, end_date, reason, status } = req.body;
+
+  if (!employee_id || !start_date || !end_date || !reason || !status) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  const newRequest = { employee_id, start_date, end_date, reason, status };
+  leaveRequests.push(newRequest);
+
+  res.status(201).send('Leave request submitted');
 });
 
-// Add more routes as needed
+router.get('/leave_requests', (req, res) => {
+  res.status(200).json(leaveRequests); // Return all leave requests
+});
 
 module.exports = router;
