@@ -1,45 +1,55 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { sql, config } = require('./db'); // ✅ SQL Server config
 
 const app = express();
 
-// ✅ FIX: Enable CORS for your Vercel frontend
+// ✅ Enable CORS for Vercel frontend
 app.use(cors({
-  origin: 'https://attendance-tracker-lac.vercel.app', // 👈 your Vercel frontend
+  origin: 'https://attendance-tracker-lac.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
-// ✅ Middleware for JSON parsing
 app.use(bodyParser.json());
 
-// ✅ Temporary in-memory array (you may replace this with DB later)
-let leaveRequests = [];
-
-// ✅ POST - Submit a leave request
-app.post('/api/leave_requests', (req, res) => {
+// ✅ POST - Submit leave request to SQL Server
+app.post('/api/leave_requests', async (req, res) => {
   const { employee_id, start_date, end_date, reason, status } = req.body;
 
   if (!employee_id || !start_date || !end_date || !reason || !status) {
     return res.status(400).send('Missing required fields');
   }
 
-  const newRequest = { employee_id, start_date, end_date, reason, status };
-  leaveRequests.push(newRequest);
-  res.status(201).send('Leave request submitted');
+  try {
+    await sql.connect(config);
+    await sql.query`
+      INSERT INTO leave_requests (employee_id, start_date, end_date, reason, status)
+      VALUES (${employee_id}, ${start_date}, ${end_date}, ${reason}, ${status});
+    `;
+    res.status(201).send('Leave request submitted');
+  } catch (err) {
+    console.error('DB Insert Error:', err);
+    res.status(500).send('Server error');
+  }
 });
 
-// ✅ GET - Get all leave requests
-app.get('/api/leave_requests', (req, res) => {
-  const requestsWithIds = leaveRequests.map((req, idx) => ({
-    id: idx,
-    ...req
-  }));
-  res.status(200).json(requestsWithIds);
+// ✅ GET - Retrieve all leave requests from SQL Server
+app.get('/api/leave_requests', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query`SELECT * FROM leave_requests`;
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error('DB Select Error:', err);
+    res.status(500).send('Server error');
+  }
 });
 
-// ✅ PUT - Manager updates status
+// 🔁 PUT route (still using in-memory logic if needed for now)
+let leaveRequests = []; // ⚠️ Remove this once PUT is converted to SQL
+
 app.put('/api/leave_requests/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const { status } = req.body;
@@ -55,10 +65,11 @@ app.put('/api/leave_requests/:id', (req, res) => {
   leaveRequests[id].status = status;
   res.status(200).send('Status updated');
 });
+
+// ✅ Admin routes
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/api/admin', adminRoutes);
 
-
-// ✅ Start the server
+// ✅ Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
