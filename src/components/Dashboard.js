@@ -5,16 +5,16 @@ const Dashboard = () => {
   const role = localStorage.getItem('role');
   const [leaveRequests, setLeaveRequests] = useState([]);
 
-const fetchLeaveRequests = async () => {
-  try {
-    const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
-    const data = await response.json();
-    console.log("Fetched leave requests:", data); // 👈 add this
-    setLeaveRequests(data);
-  } catch (error) {
-    console.error('Error fetching leave requests:', error);
-  }
-};
+  const fetchLeaveRequests = async () => {
+    try {
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
+      const data = await response.json();
+      console.log("Fetched leave requests:", data);
+      setLeaveRequests(data);
+    } catch (error) {
+      console.error('Error fetching leave requests:', error);
+    }
+  };
 
   useEffect(() => {
     fetchLeaveRequests();
@@ -33,13 +33,12 @@ const fetchLeaveRequests = async () => {
 
     console.log("Submitting leave request:", newRequest);
 
-
     try {
-     const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify(newRequest),
-   }); 
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRequest),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to submit request');
@@ -54,29 +53,27 @@ const fetchLeaveRequests = async () => {
     }
   };
 
-const handleStatusUpdate = async (leave_id, status) => {
-  console.log("Updating leave_id:", leave_id, "Status:", status);
+  const handleStatusUpdate = async (leave_id, status) => {
+    console.log("Updating leave_id:", leave_id, "Status:", status);
 
-  try {
-    const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/leave_requests/${leave_id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status }),
-    });
+    try {
+      const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/leave_requests/${leave_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
 
-    if (!res.ok) {
-      throw new Error('Failed to update');
+      if (!res.ok) {
+        throw new Error('Failed to update');
+      }
+
+      alert('Leave request updated successfully');
+      fetchLeaveRequests();
+    } catch (error) {
+      console.error('Error updating request:', error);
+      alert('Error updating leave request');
     }
-
-    alert('Leave request updated successfully');
-    fetchLeaveRequests();
-  } catch (error) {
-    console.error('Error updating request:', error);
-    alert('Error updating leave request');
-  }
-};
+  };
 
   return (
     <div>
@@ -102,37 +99,47 @@ const handleStatusUpdate = async (leave_id, status) => {
       )}
 
       {/* Manager View */}
-{role === 'manager' && (
-  <>
-    <h4>Pending Leave Requests</h4>
-    <table border="1" cellPadding="6">
-      <thead>
-        <tr>
-          <th>Employee ID</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Reason</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-  {leaveRequests.map((req) => (
-    <tr key={req.leave_id}>
-      <td>{req.employee_id}</td>
-      <td>{req.start_date}</td>
-      <td>{req.end_date}</td>
-      <td>{req.reason}</td>
-      <td>{req.status}</td>
-      <td>
-        {req.status === 'pending' && (
-          <>
-            <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
-            <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
-          </>
-        )}
-      </td>
-    </tr>
-  ))}
-</tbody>
+      {role === 'manager' && (
+        <>
+          <h4>Pending Leave Requests</h4>
+          <table border="1" cellPadding="6">
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaveRequests.map((req) => {
+                console.log("Rendering row:", req); // helpful for debugging
+                return (
+                  <tr key={req.leave_id}>
+                    <td>{req.employee_id}</td>
+                    <td>{req.start_date}</td>
+                    <td>{req.end_date}</td>
+                    <td>{req.reason}</td>
+                    <td>{req.status}</td>
+                    <td>
+                      {req.status === 'pending' && (
+                        <>
+                          <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
+                          <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </>
+      )}
+    </div>
+  );
+};
 
+export default Dashboard;
