@@ -55,6 +55,9 @@ app.put('/api/leave_requests/:id', (req, res) => {
   leaveRequests[id].status = status;
   res.status(200).send('Status updated');
 });
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/api/admin', adminRoutes);
+
 
 // ✅ Start the server
 const port = process.env.PORT || 3000;
