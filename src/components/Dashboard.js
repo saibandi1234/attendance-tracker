@@ -20,7 +20,7 @@ function Dashboard() {
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch('http://20.83.176.127:3000/api/leave_requests', {
+    const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ function Dashboard() {
 
 const fetchLeaveRequests = async () => {
   try {
-    const response = await fetch('http://20.83.176.127:3000/api/leave_requests');
+    const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
     const data = await response.json();
     setLeaveRequests(data);
   } catch (error) {
