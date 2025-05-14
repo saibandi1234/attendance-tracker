@@ -18,36 +18,36 @@ function Dashboard() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+    e.preventDefault();
+    try {
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    if (response.ok) {
-      setMessage('Leave request submitted successfully');
-      fetchLeaveRequests(); // Refresh the table
-    } else {
-      setMessage('Failed to submit leave request');
+      if (response.ok) {
+        setMessage('Leave request submitted successfully');
+        fetchLeaveRequests(); // Refresh the table
+      } else {
+        setMessage('Failed to submit leave request');
+      }
+    } catch (error) {
+      setMessage('Server error');
     }
-  } catch (error) {
-    setMessage('Server error');
-  }
-};
+  };
 
-const fetchLeaveRequests = async () => {
-  try {
-    const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
-    const data = await response.json();
-    setLeaveRequests(data);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
+  const fetchLeaveRequests = async () => {
+    try {
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
+      const data = await response.json();
+      setLeaveRequests(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
     fetchLeaveRequests();
@@ -57,10 +57,28 @@ const fetchLeaveRequests = async () => {
     <div>
       <h2>Submit Leave Request</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="employee_id" placeholder="Employee ID" onChange={handleChange} /><br /><br />
-        <input type="date" name="start_date" onChange={handleChange} /><br /><br />
-        <input type="date" name="end_date" onChange={handleChange} /><br /><br />
-        <input type="text" name="reason" placeholder="Reason" onChange={handleChange} /><br /><br />
+        <input
+          type="text"
+          name="employee_id"
+          placeholder="Employee ID"
+          onChange={handleChange}
+        /><br /><br />
+        <input
+          type="date"
+          name="start_date"
+          onChange={handleChange}
+        /><br /><br />
+        <input
+          type="date"
+          name="end_date"
+          onChange={handleChange}
+        /><br /><br />
+        <input
+          type="text"
+          name="reason"
+          placeholder="Reason"
+          onChange={handleChange}
+        /><br /><br />
         <select name="status" onChange={handleChange}>
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
