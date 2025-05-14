@@ -1,4 +1,6 @@
-const config = require('mssql');
+const sql = require('mssql');
+
+const config = {
   user: 'sa',
   password: 'StrongPassw0rd123!',
   server: '20.83.176.127',
