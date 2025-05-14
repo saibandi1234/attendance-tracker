@@ -114,7 +114,13 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {leaveRequests.map((req) => {
+             {leaveRequests.map((req) => {
+             console.log("Rendering leave request:", req); // ✅ ADD THIS
+             return (
+              <tr key={req.leave_id}>
+              <td>{req.employee_id}</td>
+              ...
+
                 console.log("Rendering row:", req); // helpful for debugging
                 return (
                   <tr key={req.leave_id}>
