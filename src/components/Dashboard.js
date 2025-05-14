@@ -10,6 +10,7 @@ const Dashboard = () => {
       const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
       const data = await response.json();
       setLeaveRequests(data);
+console.log("Fetched leave requests:", data);
     } catch (error) {
       console.error('Error fetching leave requests:', error);
     }
