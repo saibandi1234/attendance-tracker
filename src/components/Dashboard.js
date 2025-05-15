@@ -38,6 +38,7 @@ const leave_id = leaveRequests.length > 0
   ? Math.max(...leaveRequests.map(r => r.leave_id)) + 1
   : 1;
     const newRequest = {
+      leave_id,
       employee_id: parseInt(username),
       start_date: form.start_date.value,
       end_date: form.end_date.value,
