@@ -62,13 +62,7 @@ const LeaveRequest = () => {
       <h4>Your Leave Requests</h4>
       <table border="1" cellPadding="6">
         <thead>
-          <tr>
-            <th>Leave ID</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Reason</th>
-            <th>Status</th>
-          </tr>
+          <tr><th>ID</th><th>Start</th><th>End</th><th>Reason</th><th>Status</th></tr>
         </thead>
         <tbody>
           {requests.map(r => (

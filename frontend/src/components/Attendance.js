@@ -56,11 +56,7 @@ const Attendance = () => {
       <h4>Your Attendance Logs</h4>
       <table border="1" cellPadding="6">
         <thead>
-          <tr>
-            <th>Log ID</th>
-            <th>Time</th>
-            <th>Status</th>
-          </tr>
+          <tr><th>Log ID</th><th>Time</th><th>Status</th></tr>
         </thead>
         <tbody>
           {logs.map(log => (

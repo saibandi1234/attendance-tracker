@@ -13,12 +13,8 @@ const Dashboard = () => {
 
       {role === 'employee' && (
         <>
-          <Link to="/dashboard/attendance">
-            <button>Clock In/Out</button>
-          </Link>{' '}
-          <Link to="/dashboard/leave">
-            <button>Leave Request</button>
-          </Link>
+          <Link to="/dashboard/attendance"><button>Clock In/Out</button></Link>{' '}
+          <Link to="/dashboard/leave"><button>Leave Request</button></Link>
         </>
       )}
     </div>
