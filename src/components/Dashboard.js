@@ -7,11 +7,13 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h3>Welcome, {username} ({role})</h3>
+      <h3>Dashboard Loaded</h3>
+      <p>Username: {username}</p>
+      <p>Role: {role}</p>
       <a href="/">Logout</a>
       <br /><br />
 
-      {role === 'employee' && (
+      {role === 'employee' ? (
         <>
           <Link to="/dashboard/attendance">
             <button>Clock In/Out</button>
@@ -20,6 +22,8 @@ const Dashboard = () => {
             <button>Leave Request</button>
           </Link>
         </>
+      ) : (
+        <p>No employee view. Your role is: {role}</p>
       )}
     </div>
   );
