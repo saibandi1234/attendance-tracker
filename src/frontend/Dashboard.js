@@ -148,10 +148,18 @@ const leave_id = leaveRequests.length > 0
                   <td>
                     {req.status === 'pending' && (
                       <>
-                        <button onClick={() => {
-console.log("Updating leave_id:", req.leave_id);
- handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>
-                        <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
+<button onClick={() => {
+  console.log("Updating leave_id:", req.leave_id);
+  handleStatusUpdate(req.leave_id, 'approved');
+}}>
+  Approve
+</button>
+
+<button onClick={() => {
+  handleStatusUpdate(req.leave_id, 'rejected');
+}}>
+  Reject
+</button>
                       </>
                     )}
                   </td>
