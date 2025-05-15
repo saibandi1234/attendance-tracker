@@ -1,18 +1,16 @@
-import AdminDashboard from './components/AdminDashboard';
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
-import Dashboard from './frontend/Dashboard';
-import './styles.css';
+import Dashboard from './components/Dashboard';
+import Attendance from './components/Attendance';
+import LeaveRequest from './components/LeaveRequest';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-    </Routes>
+        <Route path="/dashboard/attendance" element={<Attendance />} />
+        <Route path="/dashboard/leave" element={<LeaveRequest />} />
+      </Routes>
     </Router>
   );
 }
