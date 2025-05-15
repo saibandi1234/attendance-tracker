@@ -29,14 +29,16 @@ const Dashboard = () => {
   useEffect(() => {
     fetchLeaveRequests();
     fetchAttendanceLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
-const leave_id = leaveRequests.length > 0
-  ? Math.max(...leaveRequests.map(r => r.leave_id)) + 1
-  : 1;
+    const leave_id = leaveRequests.length > 0
+      ? Math.max(...leaveRequests.map(r => r.leave_id)) + 1
+      : 1;
+
     const newRequest = {
       leave_id,
       employee_id: parseInt(username),
@@ -129,6 +131,7 @@ const leave_id = leaveRequests.length > 0
           <table border="1" cellPadding="6">
             <thead>
               <tr>
+                <th>Leave ID</th>
                 <th>Employee ID</th>
                 <th>Start</th>
                 <th>End</th>
@@ -140,6 +143,7 @@ const leave_id = leaveRequests.length > 0
             <tbody>
               {leaveRequests.map(req => (
                 <tr key={req.leave_id}>
+                  <td>{req.leave_id}</td>
                   <td>{req.employee_id}</td>
                   <td>{req.start_date}</td>
                   <td>{req.end_date}</td>
@@ -148,18 +152,12 @@ const leave_id = leaveRequests.length > 0
                   <td>
                     {req.status === 'pending' && (
                       <>
-<button onClick={() => {
-  console.log("Updating leave_id:", req.leave_id);
-  handleStatusUpdate(req.leave_id, 'approved');
-}}>
-  Approve
-</button>
-
-<button onClick={() => {
-  handleStatusUpdate(req.leave_id, 'rejected');
-}}>
-  Reject
-</button>
+                        <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>
+                          Approve
+                        </button>{' '}
+                        <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>
+                          Reject
+                        </button>
                       </>
                     )}
                   </td>
