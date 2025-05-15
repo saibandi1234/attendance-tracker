@@ -13,33 +13,27 @@ app.use(bodyParser.json());
 // ------------------- In-Memory Data -------------------
 let leaveRequests = [];
 let attendanceLogs = [];
+let employees = [
+  { id: 111, name: 'Employee One', role: 'employee' },
+  { id: 222, name: 'Manager One', role: 'manager' },
+  { id: 999, name: 'Admin One', role: 'admin' }
+];
 
-// ------------------- API Routes -------------------
-
-// Submit leave request
+// ------------------- Leave Request APIs -------------------
 app.post('/api/leave_requests', (req, res) => {
-const { leave_id, employee_id, start_date, end_date, reason, status } = req.body;
-if (!leave_id || !employee_id || !start_date || !end_date || !reason || !status) {
-  return res.status(400).send('Missing required fields');
-}
-const newRequest = {
-  leave_id,
-  employee_id,
-  start_date,
-  end_date,
-  reason,
-  status
-};
-leaveRequests.push(newRequest);
-res.status(201).json(newRequest);
+  const { leave_id, employee_id, start_date, end_date, reason, status } = req.body;
+  if (!leave_id || !employee_id || !start_date || !end_date || !reason || !status) {
+    return res.status(400).send('Missing required fields');
+  }
+  const newRequest = { leave_id, employee_id, start_date, end_date, reason, status };
+  leaveRequests.push(newRequest);
+  res.status(201).json(newRequest);
 });
 
-// Get leave requests
 app.get('/api/leave_requests', (req, res) => {
   res.json(leaveRequests);
 });
 
-// Update leave request status (manager)
 app.put('/api/leave_requests/:id', (req, res) => {
   const leave_id = parseInt(req.params.id);
   const { status } = req.body;
@@ -49,7 +43,7 @@ app.put('/api/leave_requests/:id', (req, res) => {
   res.send('Status updated');
 });
 
-// Submit attendance (clock-in/out)
+// ------------------- Attendance APIs -------------------
 app.post('/api/attendance', (req, res) => {
   const { employee_id, log_time, status } = req.body;
   if (!employee_id || !log_time || !status) {
@@ -65,7 +59,6 @@ app.post('/api/attendance', (req, res) => {
   res.status(201).send('Attendance logged');
 });
 
-// Get attendance logs
 app.get('/api/attendance', (req, res) => {
   const emp_id = req.query.emp_id;
   if (!emp_id) return res.status(400).send('Missing emp_id');
@@ -73,9 +66,29 @@ app.get('/api/attendance', (req, res) => {
   res.json(logs);
 });
 
-// Start Server
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`✅ In-memory server running on port ${port}`));
+// ------------------- Admin APIs -------------------
+app.get('/api/admin/summary', (req, res) => {
+  const totalEmployees = employees.length;
+  const totalLeaveRequests = leaveRequests.length;
+  const approvedLeaves = leaveRequests.filter(r => r.status === 'approved').length;
+  const pendingLeaves = leaveRequests.filter(r => r.status === 'pending').length;
+  const rejectedLeaves = leaveRequests.filter(r => r.status === 'rejected').length;
 
+  res.json({
+    totalEmployees,
+    totalLeaveRequests,
+    approvedLeaves,
+    pendingLeaves,
+    rejectedLeaves
+  });
+});
+
+app.get('/api/admin/employees', (req, res) => {
+  res.json(employees);
+});
+
+// ------------------- Start Server -------------------
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`✅ Server running on port ${port}`));
 
 
