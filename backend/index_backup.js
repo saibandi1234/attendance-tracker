@@ -18,20 +18,20 @@ let attendanceLogs = [];
 
 // Submit leave request
 app.post('/api/leave_requests', (req, res) => {
-const { leave_id, employee_id, start_date, end_date, reason, status } = req.body;
-if (!leave_id || !employee_id || !start_date || !end_date || !reason || !status) {
-  return res.status(400).send('Missing required fields');
-}
-const newRequest = {
-  leave_id,
-  employee_id,
-  start_date,
-  end_date,
-  reason,
-  status
-};
-leaveRequests.push(newRequest);
-res.status(201).json(newRequest);
+  const { employee_id, start_date, end_date, reason, status } = req.body;
+  if (!employee_id || !start_date || !end_date || !reason || !status) {
+    return res.status(400).send('Missing required fields');
+  }
+  const newRequest = {
+    leave_id: leaveRequests.length + 1,
+    employee_id,
+    start_date,
+    end_date,
+    reason,
+    status
+  };
+  leaveRequests.push(newRequest);
+  res.status(201).send('Leave request submitted');
 });
 
 // Get leave requests
@@ -76,6 +76,3 @@ app.get('/api/attendance', (req, res) => {
 // Start Server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`✅ In-memory server running on port ${port}`));
-
-
-

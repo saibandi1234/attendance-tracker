@@ -150,7 +150,7 @@ const leave_id = leaveRequests.length > 0
                       <>
                         <button onClick={() => {
 console.log("Updating leave_id:", req.leave_id);
- handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
+ handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>
                         <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
                       </>
                     )}
