@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const Attendance = () => {
   const [attendanceLogs, setAttendanceLogs] = useState([]);
   const [attendanceStatus, setAttendanceStatus] = useState('clock-in');
-  const [username] = useState(localStorage.getItem('username'));
+  const username = localStorage.getItem('username');
 
   const fetchAttendanceLogs = async () => {
     try {
@@ -22,7 +22,7 @@ const Attendance = () => {
   const handleClockSubmit = async (e) => {
     e.preventDefault();
 
-    const attendanceEntry = {
+    const entry = {
       employee_id: parseInt(username),
       log_time: new Date().toISOString(),
       status: attendanceStatus,
@@ -32,14 +32,14 @@ const Attendance = () => {
       const res = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(attendanceEntry),
+        body: JSON.stringify(entry),
       });
 
       if (!res.ok) throw new Error('Failed to log attendance');
       alert('Attendance logged!');
       fetchAttendanceLogs();
     } catch (err) {
-      console.error('Attendance log error:', err);
+      console.error('Error:', err);
       alert('Failed to log attendance');
     }
   };
@@ -68,7 +68,7 @@ const Attendance = () => {
         </thead>
         <tbody>
           {attendanceLogs.length === 0 ? (
-            <tr><td colSpan="3">No attendance records found.</td></tr>
+            <tr><td colSpan="3">No records found.</td></tr>
           ) : (
             attendanceLogs.map(log => (
               <tr key={log.log_id}>
