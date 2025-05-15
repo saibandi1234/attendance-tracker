@@ -8,6 +8,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/attendance" element={<Attendance />} />
         <Route path="/dashboard/leave" element={<LeaveRequest />} />
