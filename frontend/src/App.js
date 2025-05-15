@@ -1,19 +1,29 @@
-ximport React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import Attendance from './components/Attendance';
-import LeaveRequest from './components/LeaveRequest';
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(
+    !!localStorage.getItem('username') && !!localStorage.getItem('role')
+  );
+
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setLoggedIn(false);
+  };
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/attendance" element={<Attendance />} />
-        <Route path="/dashboard/leave" element={<LeaveRequest />} />
-      </Routes>
-    </Router>
+    <div>
+      {loggedIn ? (
+        <Dashboard onLogout={handleLogout} />
+      ) : (
+        <Login onLogin={handleLogin} />
+      )}
+    </div>
   );
 }
 
