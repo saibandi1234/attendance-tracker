@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 const Attendance = () => {
   const [logs, setLogs] = useState([]);
   const [status, setStatus] = useState('clock-in');
   const username = localStorage.getItem('username');
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
       const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/attendance?emp_id=${username}`);
       const data = await res.json();
@@ -13,11 +13,11 @@ const Attendance = () => {
     } catch (err) {
       console.error('Error fetching logs:', err);
     }
-  };
+  }, [username]);
 
   useEffect(() => {
     fetchLogs();
-  }, []);
+  }, [fetchLogs]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

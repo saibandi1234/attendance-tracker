@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 const LeaveRequest = () => {
   const [requests, setRequests] = useState([]);
   const username = localStorage.getItem('username');
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       const res = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
       const data = await res.json();
-      setRequests(data.filter(r => r.employee_id == username));
+      setRequests(data.filter(r => r.employee_id === parseInt(username)));
     } catch (err) {
       console.error('Error fetching leave requests:', err);
     }
-  };
+  }, [username]);
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [fetchRequests]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
