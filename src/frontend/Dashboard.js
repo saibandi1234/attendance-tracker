@@ -5,8 +5,7 @@ const Dashboard = () => {
   const role = localStorage.getItem('role');
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [attendanceLogs, setAttendanceLogs] = useState([]);
-
-  console.log("Logged in as:", username, "Role:", role); // Debug
+  const [attendanceStatus, setAttendanceStatus] = useState('clock-in');
 
   const fetchLeaveRequests = async () => {
     try {
@@ -22,10 +21,9 @@ const Dashboard = () => {
     try {
       const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/attendance?emp_id=${username}`);
       const data = await res.json();
-      console.log("Fetched attendance logs:", data); // Debug
       setAttendanceLogs(data);
     } catch (err) {
-      console.error("Error fetching attendance logs:", err);
+      console.error('Error fetching attendance logs:', err);
     }
   };
 
@@ -35,7 +33,7 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmitLeave = async (e) => {
     e.preventDefault();
     const form = e.target;
     const leave_id = leaveRequests.length > 0
@@ -68,6 +66,31 @@ const Dashboard = () => {
     }
   };
 
+  const handleClockSubmit = async (e) => {
+    e.preventDefault();
+
+    const attendanceEntry = {
+      employee_id: parseInt(username),
+      log_time: new Date().toISOString(),
+      status: attendanceStatus,
+    };
+
+    try {
+      const res = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(attendanceEntry),
+      });
+
+      if (!res.ok) throw new Error('Failed to log attendance');
+      alert('Attendance logged!');
+      fetchAttendanceLogs();
+    } catch (err) {
+      console.error('Attendance log error:', err);
+      alert('Failed to log attendance');
+    }
+  };
+
   const handleStatusUpdate = async (leave_id, status) => {
     try {
       const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/leave_requests/${leave_id}`, {
@@ -76,7 +99,7 @@ const Dashboard = () => {
         body: JSON.stringify({ status }),
       });
 
-      if (!res.ok) throw new Error('Failed to update');
+      if (!res.ok) throw new Error('Failed to update leave status');
       alert('Leave status updated!');
       fetchLeaveRequests();
     } catch (error) {
@@ -92,18 +115,26 @@ const Dashboard = () => {
 
       {role === 'employee' && (
         <>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmitLeave}>
             <h4>Submit Leave Request</h4>
             <label>Start Date:</label><br />
             <input name="start_date" type="date" required /><br /><br />
-
             <label>End Date:</label><br />
             <input name="end_date" type="date" required /><br /><br />
-
             <label>Reason:</label><br />
             <input name="reason" type="text" required /><br /><br />
+            <button type="submit">Submit Leave</button>
+          </form>
 
-            <button type="submit">Submit</button>
+          <br />
+          <form onSubmit={handleClockSubmit}>
+            <h4>Log Attendance</h4>
+            <label>Status:</label><br />
+            <select value={attendanceStatus} onChange={(e) => setAttendanceStatus(e.target.value)}>
+              <option value="clock-in">Clock In</option>
+              <option value="clock-out">Clock Out</option>
+            </select><br /><br />
+            <button type="submit">Submit Attendance</button>
           </form>
 
           <h4>Your Attendance Logs</h4>
@@ -117,9 +148,7 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {attendanceLogs.length === 0 ? (
-                <tr>
-                  <td colSpan="3">No attendance records found.</td>
-                </tr>
+                <tr><td colSpan="3">No attendance records found.</td></tr>
               ) : (
                 attendanceLogs.map(log => (
                   <tr key={log.log_id}>
@@ -161,12 +190,8 @@ const Dashboard = () => {
                   <td>
                     {req.status === 'pending' && (
                       <>
-                        <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>
-                          Approve
-                        </button>{' '}
-                        <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>
-                          Reject
-                        </button>
+                        <button onClick={() => handleStatusUpdate(req.leave_id, 'approved')}>Approve</button>{' '}
+                        <button onClick={() => handleStatusUpdate(req.leave_id, 'rejected')}>Reject</button>
                       </>
                     )}
                   </td>
