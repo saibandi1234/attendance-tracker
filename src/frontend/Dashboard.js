@@ -6,6 +6,8 @@ const Dashboard = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [attendanceLogs, setAttendanceLogs] = useState([]);
 
+  console.log("Logged in as:", username, "Role:", role); // Debug
+
   const fetchLeaveRequests = async () => {
     try {
       const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests');
@@ -20,6 +22,7 @@ const Dashboard = () => {
     try {
       const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/attendance?emp_id=${username}`);
       const data = await res.json();
+      console.log("Fetched attendance logs:", data); // Debug
       setAttendanceLogs(data);
     } catch (err) {
       console.error("Error fetching attendance logs:", err);
@@ -113,13 +116,19 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {attendanceLogs.map(log => (
-                <tr key={log.log_id}>
-                  <td>{log.log_id}</td>
-                  <td>{new Date(log.log_time).toLocaleString()}</td>
-                  <td>{log.status}</td>
+              {attendanceLogs.length === 0 ? (
+                <tr>
+                  <td colSpan="3">No attendance records found.</td>
                 </tr>
-              ))}
+              ) : (
+                attendanceLogs.map(log => (
+                  <tr key={log.log_id}>
+                    <td>{log.log_id}</td>
+                    <td>{new Date(log.log_time).toLocaleString()}</td>
+                    <td>{log.status}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </>
