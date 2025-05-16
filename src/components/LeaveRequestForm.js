@@ -39,7 +39,7 @@ const LeaveRequestForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://your-render-backend-url.onrender.com/api/leave_requests', {
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
