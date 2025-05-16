@@ -35,36 +35,52 @@ const ViewAllLeaveRequests = () => {
     fetchRequests();
   }, []);
 
+  // 🎨 Badge color logic
+  const getStatusBadge = (status) => {
+    const style = {
+      padding: '4px 10px',
+      borderRadius: '4px',
+      color: 'white',
+      marginLeft: '10px',
+      textTransform: 'capitalize',
+      fontWeight: 'bold'
+    };
+    if (status === 'approved') return { ...style, backgroundColor: 'green' };
+    if (status === 'rejected') return { ...style, backgroundColor: 'red' };
+    return { ...style, backgroundColor: 'orange' };
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <h3>All Leave Requests</h3>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {requests.map(r => {
-          console.log('DEBUG LEAVE STATUS:', r.status); // Debugging status only
-          return (
-            <li key={r.leave_id} style={{ marginBottom: '15px', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}>
-              <strong>{r.employee_id}</strong> - {r.start_date} to {r.end_date} - {r.reason} - 
-              <span style={{ padding: '2px 6px', backgroundColor: '#e0e0e0', marginLeft: '5px', borderRadius: '4px' }}>{r.status}</span>
-              {r.status && r.status.trim().toLowerCase() === 'pending' && (
+      {requests.length === 0 ? (
+        <p>No leave requests found.</p>
+      ) : (
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {requests.map(r => (
+            <li key={r.leave_id} style={{ marginBottom: '15px', padding: '15px', border: '1px solid #ddd', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
+              <strong>{r.employee_id}</strong> - {r.start_date} to {r.end_date} - {r.reason} 
+              <span style={getStatusBadge(r.status)}>{r.status}</span>
+              {r.status === 'pending' && (
                 <>
                   <button 
                     onClick={() => updateStatus(r.leave_id, 'approved')} 
-                    style={{ marginLeft: '10px', backgroundColor: 'green', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                    style={{ marginLeft: '15px', backgroundColor: 'green', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', cursor: 'pointer' }}
                   >
                     Approve
                   </button>
                   <button 
                     onClick={() => updateStatus(r.leave_id, 'rejected')} 
-                    style={{ marginLeft: '5px', backgroundColor: 'red', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                    style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', cursor: 'pointer' }}
                   >
                     Reject
                   </button>
                 </>
               )}
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
