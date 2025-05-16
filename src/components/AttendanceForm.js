@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const AttendanceForm = () => {
-  const [type, setType] = useState('Clock In');
+  const [status, setStatus] = useState('Clock In');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -10,18 +10,19 @@ const AttendanceForm = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          emp_id: localStorage.getItem('username'),
-          log_type: type,
+          employee_id: localStorage.getItem('username'),
+          log_time: new Date().toISOString(),
+          status: status
         }),
       });
       if (response.ok) {
-        alert(`${type} successful`);
+        alert(`${status} logged`);
       } else {
-        alert('Failed to submit attendance');
+        alert('Failed to log attendance');
       }
     } catch (error) {
-      console.error(error);
-      alert('Error while submitting attendance');
+      console.error('Error:', error);
+      alert('Error while logging attendance');
     }
   };
 
@@ -29,7 +30,7 @@ const AttendanceForm = () => {
     <div>
       <h3>Clock In/Clock Out Form</h3>
       <form onSubmit={handleSubmit}>
-        <select onChange={(e) => setType(e.target.value)}>
+        <select onChange={(e) => setStatus(e.target.value)}>
           <option>Clock In</option>
           <option>Clock Out</option>
         </select>
