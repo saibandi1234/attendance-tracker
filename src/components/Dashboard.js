@@ -30,6 +30,7 @@ import LeaveRequestForm from './LeaveRequestForm';
 import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
+import AdminEmployeeList from './AdminEmployeeList'; // ✅ Imported
 
 const Dashboard = () => {
   const username = localStorage.getItem('username');
@@ -62,6 +63,7 @@ const Dashboard = () => {
       {role === 'admin' && (
         <>
           <button onClick={() => setActiveTab('summary')}>Admin Summary</button>
+          <button onClick={() => setActiveTab('employees')}>View Employees</button> {/* ✅ New Button */}
         </>
       )}
 
@@ -71,6 +73,7 @@ const Dashboard = () => {
       {role === 'employee' && activeTab === 'attendance' && <AttendanceForm />}
       {role === 'manager' && activeTab === 'view_leave' && <ViewAllLeaveRequests />}
       {role === 'admin' && activeTab === 'summary' && <AdminSummary />}
+      {role === 'admin' && activeTab === 'employees' && <AdminEmployeeList />} {/* ✅ Show Employee List */}
     </div>
   );
 };
