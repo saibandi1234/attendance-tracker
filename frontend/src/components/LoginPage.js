@@ -8,7 +8,7 @@ const LoginPage = ({ onLogin }) => {
       localStorage.setItem('username', username);
       onLogin();
     } else {
-      alert('Please enter a valid username');
+      alert('Please enter a username');
     }
   };
 
@@ -21,16 +21,14 @@ const LoginPage = ({ onLogin }) => {
       backgroundColor: '#f0f2f5'
     }}>
       <div className="card shadow p-4" style={{ width: '350px' }}>
-        <h3 className="text-center mb-4">Login</h3>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
+        <h3 className="text-center mb-4">Welcome to Attendance Tracker</h3>
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Enter Username (e.g. 111, 222, 999)"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
         <button className="btn btn-primary w-100" onClick={handleLogin}>
           <i className="fas fa-sign-in-alt"></i> Login
         </button>
