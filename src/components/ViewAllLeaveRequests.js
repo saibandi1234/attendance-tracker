@@ -40,7 +40,7 @@ const ViewAllLeaveRequests = () => {
       <h3>All Leave Requests</h3>
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {requests.map(r => {
-          console.log('DEBUG LEAVE:', r); // Debugging the exact data
+          console.log('DEBUG LEAVE STATUS:', r.status); // Debugging status only
           return (
             <li key={r.leave_id} style={{ marginBottom: '15px', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}>
               <strong>{r.employee_id}</strong> - {r.start_date} to {r.end_date} - {r.reason} - 
