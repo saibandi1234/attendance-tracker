@@ -28,18 +28,24 @@ const Dashboard = () => {
 import React, { useState } from 'react';
 import LeaveRequestForm from './LeaveRequestForm';
 import AttendanceForm from './AttendanceForm';
+import ViewAllLeaveRequests from './ViewAllLeaveRequests';
+import AdminSummary from './AdminSummary';
 
 const Dashboard = () => {
   const username = localStorage.getItem('username');
+
   let role = 'employee';
   if (username === '222') role = 'manager';
   if (username === '999') role = 'admin';
 
-  const [activeTab, setActiveTab] = useState('leave');
+  const [activeTab, setActiveTab] = useState(
+    role === 'employee' ? 'leave' : role === 'manager' ? 'view_leave' : 'summary'
+  );
 
   return (
     <div>
-      <h2>Dashboard ({role})</h2>
+      <h2>Dashboard ({role.toUpperCase()})</h2>
+
       {role === 'employee' && (
         <>
           <button onClick={() => setActiveTab('leave')}>Leave Request</button>
