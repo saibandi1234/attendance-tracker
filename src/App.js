@@ -19,18 +19,17 @@ import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 
-const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+function App() {
   return (
-    <div>
-      {isLoggedIn ? (
-        <Dashboard />
-      ) : (
-        <LoginPage onLogin={() => setIsLoggedIn(true)} />
-      )}
+    <div style={{ 
+      padding: '30px', 
+      fontFamily: 'Arial, sans-serif', 
+      backgroundColor: '#f5f5f5', 
+      minHeight: '100vh' 
+    }}>
+      <Dashboard />
     </div>
   );
-};
+}
 
 export default App;
