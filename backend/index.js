@@ -8,11 +8,13 @@ const cors = require('cors');
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    // ✅ Allow any vercel preview or production domain dynamically
-    if (/^https:\/\/attendance-tracker(-[\w\d]+)?\.vercel\.app$/.test(origin)) {
+    if (
+      origin === 'https://attendance-tracker-lac.vercel.app' ||
+      /^https:\/\/attendance-tracker(-[\w\d]+)?\.vercel\.app$/.test(origin)
+    ) {
       return callback(null, true);
     } else {
-      console.log('❌ CORS Blocked:', origin);
+      console.log('❌ Blocked by CORS:', origin);
       return callback(new Error('Not allowed by CORS'));
     }
   },
