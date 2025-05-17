@@ -4,11 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 app.use(cors({
-  origin: [
-    'https://attendance-tracker-lac.vercel.app',
-    'https://attendance-tracker-1ssa3oykr-saibandi1234s-projects.vercel.app',
-    'https://attendance-tracker-1uovqyjwf-saibandi1234s-projects.vercel.app'  // ✅ Add this new deployment URL
-  ],
+  origin: [/^https:\/\/attendance-tracker.*\.vercel\.app$/, 'https://attendance-tracker-lac.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
