@@ -4,8 +4,16 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const cors = require('cors');
+
 app.use(cors({
-  origin: [/^https:\/\/attendance-tracker.*\.vercel\.app$/],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (/^https:\/\/attendance-tracker.*\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
