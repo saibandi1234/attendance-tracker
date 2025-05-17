@@ -1,40 +1,51 @@
 import React, { useState } from 'react';
 
 const AttendanceForm = () => {
-  const [status, setStatus] = useState('Clock In');
+  const [status, setStatus] = useState('clock-in');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const attendanceLog = {
+      employee_id: localStorage.getItem('username'),
+      log_time: new Date().toISOString(),
+      status,
+    };
+
     try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
+      const res = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          employee_id: localStorage.getItem('username'),
-          log_time: new Date().toISOString(),
-          status: status
-        }),
+        body: JSON.stringify(attendanceLog),
       });
-      if (response.ok) {
-        alert(`${status} logged`);
+      if (res.ok) {
+        alert('Attendance logged successfully!');
       } else {
-        alert('Failed to log attendance');
+        alert('Logging failed');
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error while logging attendance');
+      console.error('Error logging attendance:', error);
     }
   };
 
   return (
-    <div>
-      <h3>Clock In/Clock Out Form</h3>
+    <div className="card p-4 shadow-sm">
+      <h4>Clock In / Clock Out</h4>
       <form onSubmit={handleSubmit}>
-        <select onChange={(e) => setStatus(e.target.value)}>
-          <option>Clock In</option>
-          <option>Clock Out</option>
-        </select>
-        <button type="submit">Submit</button>
+        <div className="mb-3">
+          <label>Status</label>
+          <select
+            className="form-select"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            required
+          >
+            <option value="clock-in">Clock In</option>
+            <option value="clock-out">Clock Out</option>
+          </select>
+        </div>
+        <button className="btn btn-success w-100" type="submit">
+          Submit Attendance
+        </button>
       </form>
     </div>
   );
