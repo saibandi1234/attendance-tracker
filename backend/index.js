@@ -3,8 +3,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
+const cors = require('cors');
 app.use(cors({
-  origin: [/^https:\/\/attendance-tracker.*\.vercel\.app$/, 'https://attendance-tracker-lac.vercel.app'],
+  origin: [/^https:\/\/attendance-tracker.*\.vercel\.app$/],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
