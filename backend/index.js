@@ -7,15 +7,15 @@ const cors = require('cors');
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // Allow tools like Postman or server-to-server
     if (
-      origin === 'https://attendance-tracker-lac.vercel.app' ||
-      /^https:\/\/attendance-tracker(-[\w\d]+)?\.vercel\.app$/.test(origin)
+      origin === 'https://attendance-tracker-lac.vercel.app' || // Your main production
+      /^https:\/\/attendance-tracker(-[\w\d]+)?\.vercel\.app$/.test(origin) // Match ALL Vercel preview domains
     ) {
-      return callback(null, true);
+      callback(null, true);
     } else {
       console.log('❌ Blocked by CORS:', origin);
-      return callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
