@@ -1,77 +1,62 @@
 import React, { useState } from 'react';
 
 const LeaveRequestForm = () => {
+  const username = localStorage.getItem('username');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const leaveRequest = {
-      leave_id: Date.now(),
-      employee_id: localStorage.getItem('username'),
-      start_date: startDate,
-      end_date: endDate,
-      reason,
-      status: 'pending',
-    };
-
     try {
-      const res = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(leaveRequest),
+        body: JSON.stringify({ employee_id: username, start_date: startDate, end_date: endDate, reason }),
       });
-      if (res.ok) {
-        alert('Leave Request Submitted!');
+      if (response.ok) {
+        alert('Leave request submitted');
         setStartDate('');
         setEndDate('');
         setReason('');
       } else {
-        alert('Submission failed');
+        alert('Error submitting leave request');
       }
-    } catch (error) {
-      console.error('Error submitting leave request:', error);
+    } catch (err) {
+      console.error('Error submitting leave request:', err);
     }
   };
 
   return (
-    <div className="card p-4 shadow-sm">
-      <h4>Leave Request Form</h4>
+    <div style={{
+      maxWidth: '400px',
+      margin: '50px auto',
+      padding: '30px',
+      backgroundColor: '#fff',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h3>Leave Request</h3>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Start Date</label>
-          <input
-            type="date"
-            className="form-control"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>End Date</label>
-          <input
-            type="date"
-            className="form-control"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>Reason</label>
-          <input
-            type="text"
-            className="form-control"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            placeholder="Enter reason"
-            required
-          />
-        </div>
-        <button className="btn btn-primary w-100" type="submit">
-          Submit Request
+        <label>Start Date:</label><br />
+        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required /><br /><br />
+
+        <label>End Date:</label><br />
+        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required /><br /><br />
+
+        <label>Reason:</label><br />
+        <input type="text" value={reason} onChange={(e) => setReason(e.target.value)} required /><br /><br />
+
+        <button type="submit" style={{
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}>
+          Submit
         </button>
       </form>
     </div>
