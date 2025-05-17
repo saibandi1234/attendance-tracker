@@ -36,30 +36,34 @@ const LeaveRequestForm = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const leaveRequest = {
+      leave_id: Date.now(),
+      employee_id: localStorage.getItem('username'),
+      start_date: startDate,
+      end_date: endDate,
+      reason,
+      status: 'pending',
+    };
+
     try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+      const res = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          leave_id: Math.floor(Math.random() * 10000),
-          employee_id: localStorage.getItem('username'),
-          start_date: startDate,
-          end_date: endDate,
-          reason: reason,
-          status: 'pending'
-        }),
+        body: JSON.stringify(leaveRequest),
       });
-      if (response.ok) {
-        alert('Leave request submitted');
+      if (res.ok) {
+        alert('Leave Request Submitted!');
+        setStartDate('');
+        setEndDate('');
+        setReason('');
       } else {
-        alert('Failed to submit leave request');
+        alert('Submission failed');
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error while submitting leave');
+      console.error('Error submitting leave request:', error);
     }
   };
 
@@ -75,11 +79,43 @@ const LeaveRequestForm = () => {
     </form>
     <div>
       <h3>Leave Request Form</h3>
+    <div className="card p-4 shadow-sm">
+      <h4>Leave Request Form</h4>
       <form onSubmit={handleSubmit}>
-        <input type="date" onChange={(e) => setStartDate(e.target.value)} required placeholder="Start Date" />
-        <input type="date" onChange={(e) => setEndDate(e.target.value)} required placeholder="End Date" />
-        <input placeholder="Reason" onChange={(e) => setReason(e.target.value)} required />
-        <button type="submit">Submit</button>
+        <div className="mb-3">
+          <label>Start Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label>End Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label>Reason</label>
+          <input
+            type="text"
+            className="form-control"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="Enter reason"
+            required
+          />
+        </div>
+        <button className="btn btn-primary w-100" type="submit">
+          Submit Request
+        </button>
       </form>
     </div>
   );
