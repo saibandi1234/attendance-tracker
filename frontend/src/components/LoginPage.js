@@ -3,46 +3,56 @@ import React, { useState } from 'react';
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
 
-  const handleLogin = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (username) {
       localStorage.setItem('username', username);
-      window.location.reload();
-    } else {
-      alert('Please enter a username');
+      onLogin();
     }
   };
 
   return (
     <div style={{
-      backgroundColor: '#f0f2f5',
-      minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#f0f4f8',
+      fontFamily: 'Arial, sans-serif'
     }}>
-      <div style={{
+      <form onSubmit={handleSubmit} style={{
         backgroundColor: '#fff',
-        padding: '30px',
-        borderRadius: '8px',
+        padding: '40px',
+        borderRadius: '10px',
         boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
         textAlign: 'center'
       }}>
         <h2>Attendance Tracker Login</h2>
         <input
           type="text"
-          placeholder="Enter username"
+          placeholder="Enter your Employee ID"
           value={username}
-          onChange={e => setUsername(e.target.value)}
-          style={{ padding: '10px', marginBottom: '10px', width: '100%', borderRadius: '4px' }}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          style={{
+            padding: '10px',
+            width: '100%',
+            marginBottom: '20px',
+            borderRadius: '5px',
+            border: '1px solid #ccc'
+          }}
         />
-        <br />
-        <button
-          onClick={handleLogin}
-          style={{ padding: '10px 20px', backgroundColor: '#1890ff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
+        <button type="submit" style={{
+          backgroundColor: '#4CAF50',
+          color: '#fff',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}>
           Login
         </button>
-      </div>
+      </form>
     </div>
   );
 };
