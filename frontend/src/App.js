@@ -15,5 +15,6 @@ const App = () => {
     </div>
   );
 };
+<h1 className="text-4xl font-bold text-purple-700">✅ Tailwind is Working!</h1>
 
 export default App;
