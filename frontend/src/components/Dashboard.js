@@ -3,6 +3,7 @@ import LeaveRequestForm from './LeaveRequestForm';
 import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
+import AttendanceLogs from './AttendanceLogs';
 
 const Dashboard = () => {
   const username = localStorage.getItem('username');
@@ -24,6 +25,7 @@ const Dashboard = () => {
           <button onClick={() => setActiveTab('leave')}>Leave Request</button>
           <button onClick={() => setActiveTab('attendance')}>Clock In/Out</button>
         </>
+<AttendanceLogs />
       )}
 
       {role === 'manager' && (
