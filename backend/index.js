@@ -3,10 +3,22 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
+
 app.use(cors({
-  origin: ['https://attendance-tracker-lac.vercel.app', 'https://attendance-tracker-1ssa3oykr-saibandi1234s-projects.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  origin: (origin, callback) => {
+    if (
+      !origin || 
+      origin === 'http://localhost:3000' ||
+      origin === 'https://attendance-tracker.vercel.app' ||
+      /\.vercel\.app$/.test(origin)
+    ) {
+      callback(null, true);
+    } else {
+      console.log(`❌ BLOCKED ORIGIN: ${origin}`);
+      callback(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true,
 }));
 app.use(bodyParser.json());
 
