@@ -8,13 +8,21 @@ const LoginPage = () => {
     e.preventDefault();
     localStorage.setItem('username', username);
     localStorage.setItem('role', role);
-    window.location.href = "/dashboard";
+
+    // Redirect to specific dashboard
+    if (role === 'Admin') {
+      window.location.href = '/admin-dashboard';
+    } else if (role === 'Manager') {
+      window.location.href = '/manager-dashboard';
+    } else {
+      window.location.href = '/dashboard'; // Employee
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-200 to-pink-200 flex items-center justify-center">
       <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-purple-800 mb-6">Employee Login</h2>
+        <h2 className="text-3xl font-bold text-center text-purple-800 mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="text"
@@ -30,6 +38,8 @@ const LoginPage = () => {
             className="w-full px-4 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-purple-400"
           >
             <option>Employee</option>
+            <option>Manager</option>
+            <option>Admin</option>
           </select>
           <button
             type="submit"

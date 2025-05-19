@@ -1,20 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
+import AdminDashboard from './components/AdminDashboard';
+import ManagerDashboard from './components/ManagerDashboard';
 
-const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function App() {
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
 
-  return (
-    <div>
-      {isLoggedIn ? (
-        <Dashboard />
-      ) : (
-        <LoginPage onLogin={() => setIsLoggedIn(true)} />
-      )}
-    </div>
-  );
-};
-<h1 className="text-4xl font-bold text-purple-700">✅ Tailwind is Working!</h1>
+  const path = window.location.pathname;
+
+  if (!username) {
+    return <LoginPage />;
+  }
+
+  if (path === '/admin-dashboard') {
+    return <AdminDashboard />;
+  }
+
+  if (path === '/manager-dashboard') {
+    return <ManagerDashboard />;
+  }
+
+  return <Dashboard />;
+}
 
 export default App;
