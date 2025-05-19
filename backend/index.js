@@ -1,13 +1,14 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
 
+const cors = require('cors');
+
 app.use(cors({
   origin: (origin, callback) => {
     if (
-      !origin || 
+      !origin ||
       origin === 'http://localhost:3000' ||
       origin === 'https://attendance-tracker.vercel.app' ||
       /\.vercel\.app$/.test(origin)
