@@ -20,13 +20,14 @@ const Dashboard = () => {
     <div>
       <h2>Dashboard ({role.toUpperCase()})</h2>
 
-      {role === 'employee' && (
-        <>
-          <button onClick={() => setActiveTab('leave')}>Leave Request</button>
-          <button onClick={() => setActiveTab('attendance')}>Clock In/Out</button>
-        </>
-<AttendanceLogs />
-      )}
+{role === 'employee' && (
+  <>
+    <div>
+      <button onClick={() => setActiveTab('attendance')}>Clock In/Out</button>
+      <AttendanceLogs />
+    </div>
+  </>
+)}
 
       {role === 'manager' && (
         <>
