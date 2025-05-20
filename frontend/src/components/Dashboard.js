@@ -16,18 +16,23 @@ const Dashboard = () => {
     role === 'employee' ? 'leave' : role === 'manager' ? 'view_leave' : 'summary'
   );
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   return (
     <div>
       <h2>Dashboard ({role.toUpperCase()})</h2>
 
-{role === 'employee' && (
-  <>
-    <div>
-      <button onClick={() => setActiveTab('attendance')}>Clock In/Out</button>
-      <AttendanceLogs />
-    </div>
-  </>
-)}
+      {role === 'employee' && (
+        <>
+          <div>
+            <button onClick={() => setActiveTab('attendance')}>Clock In/Out</button>
+            <AttendanceLogs />
+          </div>
+        </>
+      )}
 
       {role === 'manager' && (
         <>
@@ -41,7 +46,7 @@ const Dashboard = () => {
         </>
       )}
 
-      <button onClick={() => window.location.reload()}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
 
       {role === 'employee' && activeTab === 'leave' && <LeaveRequestForm />}
       {role === 'employee' && activeTab === 'attendance' && <AttendanceForm />}
