@@ -67,7 +67,7 @@ const payload = {
     const date = log.log_time && !isNaN(new Date(log.log_time)) ? new Date(log.log_time) : null;
     return (
       <li key={index} className="p-2 border rounded-md">
-        <strong>{log.status || log.action}</strong> at{' '}
+        <strong>{log.status}</strong> at{' '}
         {date ? date.toLocaleString() : 'Invalid or missing timestamp'}
       </li>
     );
