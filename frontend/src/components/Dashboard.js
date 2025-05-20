@@ -13,17 +13,12 @@ const Dashboard = () => {
   if (username === '999') role = 'admin';
 
   const [activeTab, setActiveTab] = useState(
-const handleLogout = () => {
-  localStorage.clear();          // Clears login session
-  window.location.reload();      // Triggers App.js to re-evaluate and show Login
-};
-
     role === 'employee' ? 'leave' : role === 'manager' ? 'view_leave' : 'summary'
   );
 
   const handleLogout = () => {
-    localStorage.clear();
-    window.location.reload();
+    localStorage.clear();          // Clears login session
+    window.location.reload();      // Triggers App.js to re-evaluate and show Login
   };
 
   return (
