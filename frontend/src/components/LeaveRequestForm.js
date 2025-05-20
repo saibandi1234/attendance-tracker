@@ -9,20 +9,20 @@ const LeaveRequestForm = () => {
     e.preventDefault();
     const username = localStorage.getItem('username');
 
-    const payload = {
-      employee_id: username,
-      start_date: startDate,
-      end_date: endDate,
-      reason,
-      status: 'pending',
-    };
+const payload = {
+  employee_id: localStorage.getItem('username'),
+  start_date: startDate,
+  end_date: endDate,
+  reason,
+  status: 'pending'
+};
 
     try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload),
+});
 
       if (response.ok) {
         alert('✅ Leave request submitted');
