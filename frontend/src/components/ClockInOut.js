@@ -5,42 +5,38 @@ const ClockInOut = () => {
   const [logs, setLogs] = useState([]);
   const [status, setStatus] = useState('Clock In');
 
-  const handleClock = async () => {
-const timestamp = new Date().toISOString(); // ✅ valid ISO format
-
-const payload = {
-  emp_id: username,
-  action,
-  timestamp,
-};
-
-    try {
-      const res = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        setStatus((prev) => (prev === 'Clock In' ? 'Clock Out' : 'Clock In'));
-        fetchLogs(); // refresh logs
-      } else {
-        console.error('Clock-in failed:', res.status);
-      }
-    } catch (error) {
-      console.error('Error logging attendance:', error);
-    }
-  };
-
   const fetchLogs = async () => {
     try {
       const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/attendance?emp_id=${username}`);
       const data = await res.json();
-      setLogs(data.reverse());
+      setLogs(data.reverse()); // show recent first
     } catch (err) {
-      console.error('Error fetching logs:', err);
+      console.error("Error fetching logs:", err);
+    }
+  };
+
+  const handleClock = async () => {
+    const payload = {
+      emp_id: username,
+      action: status,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        setStatus(prev => (prev === 'Clock In' ? 'Clock Out' : 'Clock In'));
+        fetchLogs(); // reload logs
+      } else {
+        alert('Failed to log attendance');
+      }
+    } catch (err) {
+      console.error('Error logging attendance:', err);
     }
   };
 
@@ -62,19 +58,15 @@ const payload = {
 
       <div className="mt-6">
         <h4 className="font-medium text-gray-700 mb-2">Your Attendance Logs</h4>
-<ul className="space-y-2 text-sm max-h-64 overflow-y-auto">
-  {logs.map((log, index) => {
-    const date = log.log_time && !isNaN(new Date(log.log_time)) ? new Date(log.log_time) : null;
-    return (
-      <li key={index} className="p-2 border rounded-md">
-<strong>{log.status}</strong> at{' '}
-{log.log_time && !isNaN(new Date(log.log_time))
-  ? new Date(log.log_time).toLocaleString()
-  : 'Invalid or missing timestamp'}
-      </li>
-    );
-  })}
-</ul>
+        <ul className="space-y-2 text-sm max-h-64 overflow-y-auto">
+          {logs.map((log, index) => {
+            const time = new Date(log.log_time);
+            return (
+              <li key={index} className="p-2 border rounded-md bg-gray-100">
+                <strong>{log.status || log.action}</strong> at {time.toLocaleString()}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

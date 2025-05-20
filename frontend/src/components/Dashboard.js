@@ -8,9 +8,9 @@ import AttendanceLogs from './AttendanceLogs';
 const Dashboard = () => {
   const username = localStorage.getItem('username');
 
-  let role = 'employee';
-  if (username === '222') role = 'manager';
-  if (username === '999') role = 'admin';
+let role = 'employee'; // default to employee
+if (username === '222') role = 'manager';
+else if (username === '999') role = 'admin';
 
   const [activeTab, setActiveTab] = useState(
     role === 'employee' ? 'leave' : role === 'manager' ? 'view_leave' : 'summary'
