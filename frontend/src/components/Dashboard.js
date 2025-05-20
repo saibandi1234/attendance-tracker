@@ -17,8 +17,8 @@ const Dashboard = () => {
   );
 
   const handleLogout = () => {
-    localStorage.clear();          // Clears login session
-    window.location.reload();      // Triggers App.js to re-evaluate and show Login
+    localStorage.clear();
+    window.location.reload();
   };
 
   return (
