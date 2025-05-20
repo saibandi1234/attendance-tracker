@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const AdminSummary = () => {
-  const [summary, setSummary] = useState({});
+  // Temporary employee list for demo purposes
+  const employees = [
+    '101', '102', '103', '104', '105', // you can add as many as you want
+    '106', '107', '108', '109', '110',
+  ];
 
-  const fetchSummary = async () => {
-    const res = await fetch('https://attendance-backend-vcna.onrender.com/api/admin/summary');
-    const data = await res.json();
-    setSummary(data);
-  };
-
-  useEffect(() => {
-    fetchSummary();
-  }, []);
+  const totalEmployees = employees.length;
 
   return (
-    <div>
-      <h3>Admin Summary</h3>
-      <p>Total Employees: {summary.totalEmployees}</p>
-      <p>Total Leave Requests: {summary.totalLeaveRequests}</p>
-      <p>Approved Leaves: {summary.approvedLeaves}</p>
-      <p>Pending Leaves: {summary.pendingLeaves}</p>
-      <p>Rejected Leaves: {summary.rejectedLeaves}</p>
+    <div className="p-6 bg-white rounded-xl shadow-md mt-6">
+      <h3 className="text-xl font-bold text-purple-800 mb-4">Admin Summary</h3>
+      <ul className="space-y-2 text-gray-700">
+        <li><strong>Total Employees:</strong> {totalEmployees}</li>
+        <li><strong>Total Managers:</strong> 1</li>
+        <li><strong>Total Admins:</strong> 1</li>
+        <li><strong>Clock-In Logs:</strong> Stored in backend</li>
+        <li><strong>Leave Requests:</strong> Manager can view pending requests</li>
+      </ul>
     </div>
   );
 };
