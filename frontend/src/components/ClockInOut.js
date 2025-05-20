@@ -63,14 +63,15 @@ const payload = {
       <div className="mt-6">
         <h4 className="font-medium text-gray-700 mb-2">Your Attendance Logs</h4>
 <ul className="space-y-2 text-sm max-h-64 overflow-y-auto">
-  {logs.map((log, index) => (
-    <li key={index} className="p-2 border rounded-md">
-<strong>{log.status}</strong> at{' '}
-{log.log_time && !isNaN(new Date(log.log_time))
-  ? new Date(log.log_time).toLocaleString()
-  : 'Invalid or missing timestamp'}
-    </li>
-  ))}
+  {logs.map((log, index) => {
+    const date = log.log_time && !isNaN(new Date(log.log_time)) ? new Date(log.log_time) : null;
+    return (
+      <li key={index} className="p-2 border rounded-md">
+        <strong>{log.status || log.action}</strong> at{' '}
+        {date ? date.toLocaleString() : 'Invalid or missing timestamp'}
+      </li>
+    );
+  })}
 </ul>
         </ul>
       </div>
