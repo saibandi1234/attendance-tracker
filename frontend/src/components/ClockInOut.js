@@ -6,14 +6,13 @@ const ClockInOut = () => {
   const [status, setStatus] = useState('Clock In');
 
   const handleClock = async () => {
-    const timestamp = new Date().toISOString();
-    const action = status;
+const timestamp = new Date().toISOString(); // ✅ valid ISO format
 
-    const payload = {
-      emp_id: username,
-      action,
-      timestamp,
-    };
+const payload = {
+  emp_id: username,
+  action,
+  timestamp,
+};
 
     try {
       const res = await fetch('https://attendance-backend-vcna.onrender.com/api/attendance', {
@@ -63,15 +62,16 @@ const ClockInOut = () => {
 
       <div className="mt-6">
         <h4 className="font-medium text-gray-700 mb-2">Your Attendance Logs</h4>
-        <ul className="space-y-2 text-sm max-h-64 overflow-y-auto">
-          {logs.map((log, index) => (
-            <li key={index} className="p-2 border rounded-md">
-              <strong>{log.action}</strong> at{' '}
-              {log.timestamp
-                ? new Date(log.timestamp).toLocaleString()
-                : 'Invalid or missing timestamp'}
-            </li>
-          ))}
+<ul className="space-y-2 text-sm max-h-64 overflow-y-auto">
+  {logs.map((log, index) => (
+    <li key={index} className="p-2 border rounded-md">
+      <strong>{log.action}</strong> at{' '}
+{log.timestamp && !isNaN(new Date(log.timestamp))
+  ? new Date(log.timestamp).toLocaleString()
+  : 'Invalid or missing timestamp'}
+    </li>
+  ))}
+</ul>
         </ul>
       </div>
     </div>
