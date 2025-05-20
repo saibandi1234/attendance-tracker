@@ -65,9 +65,9 @@ const payload = {
 <ul className="space-y-2 text-sm max-h-64 overflow-y-auto">
   {logs.map((log, index) => (
     <li key={index} className="p-2 border rounded-md">
-      <strong>{log.action}</strong> at{' '}
-{log.timestamp && !isNaN(new Date(log.timestamp))
-  ? new Date(log.timestamp).toLocaleString()
+<strong>{log.status}</strong> at{' '}
+{log.log_time && !isNaN(new Date(log.log_time))
+  ? new Date(log.log_time).toLocaleString()
   : 'Invalid or missing timestamp'}
     </li>
   ))}
