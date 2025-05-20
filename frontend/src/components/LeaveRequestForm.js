@@ -7,22 +7,21 @@ const LeaveRequestForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const username = localStorage.getItem('username');
 
-const payload = {
-  employee_id: localStorage.getItem('username'),
-  start_date: startDate,
-  end_date: endDate,
-  reason,
-  status: 'pending'
-};
+    const payload = {
+      employee_id: localStorage.getItem('username'),
+      start_date: startDate,
+      end_date: endDate,
+      reason,
+      status: 'pending'
+    };
 
     try {
-const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload),
-});
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
       if (response.ok) {
         alert('✅ Leave request submitted');
@@ -30,10 +29,12 @@ const response = await fetch('https://attendance-backend-vcna.onrender.com/api/l
         setEndDate('');
         setReason('');
       } else {
+        const errorText = await response.text();
+        console.error('❌ Backend error:', errorText);
         alert('❌ Failed to submit leave request');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('⚠️ Error:', error);
       alert('⚠️ Error while submitting leave');
     }
   };
@@ -43,7 +44,7 @@ const response = await fetch('https://attendance-backend-vcna.onrender.com/api/l
       <h3 className="text-xl font-semibold mb-4">Leave Request Form</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label>Start Date</label>
+          <label className="block text-sm font-medium mb-1">Start Date</label>
           <input
             type="date"
             value={startDate}
@@ -53,7 +54,7 @@ const response = await fetch('https://attendance-backend-vcna.onrender.com/api/l
           />
         </div>
         <div>
-          <label>End Date</label>
+          <label className="block text-sm font-medium mb-1">End Date</label>
           <input
             type="date"
             value={endDate}
@@ -63,7 +64,7 @@ const response = await fetch('https://attendance-backend-vcna.onrender.com/api/l
           />
         </div>
         <div>
-          <label>Reason</label>
+          <label className="block text-sm font-medium mb-1">Reason</label>
           <input
             type="text"
             value={reason}
@@ -72,7 +73,10 @@ const response = await fetch('https://attendance-backend-vcna.onrender.com/api/l
             className="border p-2 rounded w-full"
           />
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-2"
+        >
           Submit
         </button>
       </form>
