@@ -6,18 +6,25 @@ const AttendanceLogs = () => {
 
   useEffect(() => {
     const fetchLogs = async () => {
+      if (!username || username.trim() === '') {
+        console.error("❌ Username is missing or invalid in localStorage");
+        return;
+      }
+
       try {
         const res = await fetch(`https://attendance-backend-vcna.onrender.com/api/attendance?emp_id=${username}`);
+        if (!res.ok) {
+          console.error(`❌ Server responded with status ${res.status}`);
+          return;
+        }
         const data = await res.json();
-        setLogs(data.reverse()); // show latest first
+        setLogs(data.reverse());
       } catch (err) {
-        console.error("Error fetching logs:", err);
+        console.error("❌ Network or parsing error while fetching logs:", err);
       }
     };
 
-    if (username) {
-      fetchLogs();
-    }
+    fetchLogs();
   }, [username]);
 
   return (
