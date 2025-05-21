@@ -3,13 +3,11 @@ import LeaveRequestForm from './LeaveRequestForm';
 import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
+import AttendanceLogs from './AttendanceLogs';
 
 const Dashboard = () => {
-  const username = localStorage.getItem('username');
-
-  let role = 'employee';
-  if (username === '222') role = 'manager';
-  if (username === '999') role = 'admin';
+  const username = localStorage.getItem("username");
+  const role = localStorage.getItem("role");
 
   const [activeTab, setActiveTab] = useState(
     role === 'employee' ? 'leave' : role === 'manager' ? 'view_leave' : 'summary'
@@ -40,8 +38,14 @@ const Dashboard = () => {
 
       <button onClick={() => window.location.reload()}>Logout</button>
 
+      {/* Component display based on activeTab */}
       {role === 'employee' && activeTab === 'leave' && <LeaveRequestForm />}
-      {role === 'employee' && activeTab === 'attendance' && <AttendanceForm />}
+      {role === 'employee' && activeTab === 'attendance' && (
+        <>
+          <AttendanceForm />
+          <AttendanceLogs employeeId={parseInt(username)} />
+        </>
+      )}
       {role === 'manager' && activeTab === 'view_leave' && <ViewAllLeaveRequests />}
       {role === 'admin' && activeTab === 'summary' && <AdminSummary />}
     </div>
