@@ -1,56 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const LeaveRequestForm = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [reason, setReason] = useState('');
+  const [formData, setFormData] = useState({
+    emp_id: '',
+    start_date: '',
+    end_date: '',
+    reason: ''
+  });
+
+  useEffect(() => {
+    const emp_id = localStorage.getItem('username');
+    if (emp_id) {
+      setFormData(prev => ({ ...prev, emp_id }));
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const empId = localStorage.getItem("username");
 
-    if (!empId || !startDate || !endDate || !reason) {
-      alert("All fields are required");
+    const { emp_id, start_date, end_date, reason } = formData;
+
+    if (!emp_id || !start_date || !end_date || !reason) {
+      alert('❌ Failed: Missing required fields');
       return;
     }
 
-    const payload = {
-      employee_id: empId,
-      start_date: startDate,
-      end_date: endDate,
-      reason,
-      status: 'pending'
-    };
-
     try {
-      const response = await fetch("https://attendance-backend-vcna.onrender.com/api/leave_requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+      const response = await fetch('http://localhost:5000/api/leave_requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
       });
 
+      const result = await response.json();
+
       if (response.ok) {
-        alert("✅ Leave request submitted!");
-        setStartDate('');
-        setEndDate('');
-        setReason('');
+        alert('✅ Leave request submitted successfully');
+        setFormData({ emp_id, start_date: '', end_date: '', reason: '' });
       } else {
-        const errorText = await response.text();
-        alert(`❌ Failed: ${errorText}`);
+        alert(`❌ Failed: ${result.error || 'Unknown error'}`);
       }
     } catch (error) {
-      alert("⚠️ Something went wrong");
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-      <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
-      <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
-      <input type="text" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Reason" required />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
-    </form>
-  );
-};
-
-export default LeaveRequestForm;
+      console.error('Submission error:', error);
+      alert
