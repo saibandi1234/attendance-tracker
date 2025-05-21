@@ -7,6 +7,7 @@ const app = express();
 // ✅ CORS Setup: allow localhost + all *.vercel.app domains
 const allowedOrigins = [
   'http://localhost:3000',
+  'https://attendance-skb.vercel.app'
   'https://attendance-tracker-lac.vercel.app',
   'https://attendance-tracker-git-main-working-saibandi1234s-projects.vercel.app'
 ];
