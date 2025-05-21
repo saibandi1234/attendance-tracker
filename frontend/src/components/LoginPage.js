@@ -7,23 +7,20 @@ const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 const handleLogin = () => {
-  if (!selectedRole || !username) {
+  if (!role || !username) {
     alert("Please select a role and enter an ID");
     return;
   }
 
-  // Admin check
-  if (selectedRole === 'admin' && username !== '2803') {
+  // Admin access restriction
+  if (role === 'admin' && username !== '2803') {
     alert("Admin must use ID 2803");
     return;
   }
 
-  // Save login info
-  localStorage.setItem("role", selectedRole);
-  localStorage.setItem("username", username);
-
-  // Redirect to dashboard
-  window.location.reload();
+  localStorage.setItem('role', role);
+  localStorage.setItem('username', username);
+  window.location.reload(); // forces Dashboard rerender
 };
 
   if (isLoggedIn) return <Dashboard />;
