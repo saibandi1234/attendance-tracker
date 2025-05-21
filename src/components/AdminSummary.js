@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
 const AdminSummary = () => {
-  const [totalEmployees, setTotalEmployees] = useState(0);
+  const [summary, setSummary] = useState({});
+
+  const fetchSummary = async () => {
+    const res = await fetch('https://attendance-backend-vcna.onrender.com/api/admin/summary');
+    const data = await res.json();
+    setSummary(data);
+  };
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const res = await fetch('https://attendance-backend-vcna.onrender.com/api/employees');
-        const data = await res.json();
-        setTotalEmployees(data.length);
-      } catch (err) {
-        console.error("Error fetching employee count:", err);
-      }
-    };
-    fetchEmployees();
+    fetchSummary();
   }, []);
 
   return (
-    <div className="p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-semibold mb-2">Admin Summary</h3>
-      <p>Total Employees: {totalEmployees}</p>
+    <div>
+      <h3>Admin Summary</h3>
+      <p>Total Employees: {summary.totalEmployees}</p>
+      <p>Total Leave Requests: {summary.totalLeaveRequests}</p>
+      <p>Approved Leaves: {summary.approvedLeaves}</p>
+      <p>Pending Leaves: {summary.pendingLeaves}</p>
+      <p>Rejected Leaves: {summary.rejectedLeaves}</p>
     </div>
   );
 };

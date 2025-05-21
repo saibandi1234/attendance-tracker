@@ -19,7 +19,7 @@ const AttendanceLogs = () => {
   }, [username]);
 
   return (
-    <div className="p-4 bg-white rounded shadow">
+    <div className="p-4 bg-white rounded shadow" style={{ padding: '1rem', backgroundColor: '#fff', borderRadius: '10px' }}>
       <h3 className="text-lg font-semibold mb-2">Your Attendance Logs</h3>
       {logs.length === 0 ? (
         <p>No logs found.</p>

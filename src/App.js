@@ -1,36 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import Attendance from './components/Attendance';
-import LeaveRequest from './components/LeaveRequest';
-
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/attendance" element={<Attendance />} />
-        <Route path="/dashboard/leave" element={<LeaveRequest />} />
-      </Routes>
-    </Router>
-  );
-}
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
-import LoginPage from './components/LoginPage';
-import Dashboard from './components/Dashboard';
 
-function App() {
-  const username = localStorage.getItem('username');
-  const role = localStorage.getItem('role');
-  const path = window.location.pathname;
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  if (!username || !role) {
-    return <LoginPage />;
-  }
-
-  return <Dashboard />;
-}
+  return (
+    <div>
+      {isLoggedIn ? (
+        <Dashboard />
+      ) : (
+        <LoginPage onLogin={() => setIsLoggedIn(true)} />
+      )}
+    </div>
+  );
+};
+<h1 className="text-4xl font-bold text-purple-700">✅ Tailwind is Working!</h1>
 
 export default App;
