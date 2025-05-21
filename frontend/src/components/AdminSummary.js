@@ -1,23 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AdminSummary = () => {
-  // Temporary employee list for demo purposes
-  const employees = [
-    '101', '102', '103', '104', '105', // you can add as many as you want
-    '106', '107', '108', '109', '110',
-  ];
+  const [employeeCount, setEmployeeCount] = useState(0);
+  const [leaveStats, setLeaveStats] = useState({
+    total: 0,
+    approved: 0,
+    pending: 0,
+    rejected: 0,
+  });
 
-  const totalEmployees = employees.length;
+  // Simulate employee count by fetching unique emp_ids from attendance logs
+  useEffect(() => {
+    fetch('https://attendance-backend-vcna.onrender.com/api/attendance')
+      .then((res) => res.json())
+      .then((data) => {
+        const uniqueEmpIds = new Set(data.map((log) => log.employee_id));
+        setEmployeeCount(uniqueEmpIds.size);
+      })
+      .catch((err) => console.error("Error fetching attendance logs:", err));
+  }, []);
+
+  // Get leave stats
+  useEffect(() => {
+    fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests')
+      .then((res) => res.json())
+      .then((data) => {
+        const approved = data.filter(req => req.status === 'approved').length;
+        const pending = data.filter(req => req.status === 'pending').length;
+        const rejected = data.filter(req => req.status === 'rejected').length;
+        setLeaveStats({
+          total: data.length,
+          approved,
+          pending,
+          rejected
+        });
+      })
+      .catch((err) => console.error("Error fetching leave requests:", err));
+  }, []);
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-md mt-6">
       <h3 className="text-xl font-bold text-purple-800 mb-4">Admin Summary</h3>
       <ul className="space-y-2 text-gray-700">
-        <li><strong>Total Employees:</strong> {totalEmployees}</li>
-        <li><strong>Total Managers:</strong> 1</li>
-        <li><strong>Total Admins:</strong> 1</li>
-        <li><strong>Clock-In Logs:</strong> Stored in backend</li>
-        <li><strong>Leave Requests:</strong> Manager can view pending requests</li>
+        <li><strong>Total Employees:</strong> {employeeCount}</li>
+        <li><strong>Total Leave Requests:</strong> {leaveStats.total}</li>
+        <li><strong>Approved Leaves:</strong> {leaveStats.approved}</li>
+        <li><strong>Pending Leaves:</strong> {leaveStats.pending}</li>
+        <li><strong>Rejected Leaves:</strong> {leaveStats.rejected}</li>
       </ul>
     </div>
   );
