@@ -18,9 +18,9 @@ const handleLogin = () => {
     return;
   }
 
-  localStorage.setItem('role', role);
-  localStorage.setItem('username', username);
-  window.location.reload(); // forces Dashboard rerender
+localStorage.setItem("role", role);
+localStorage.setItem("username", username);
+window.location.reload();
 };
 
   if (isLoggedIn) return <Dashboard />;

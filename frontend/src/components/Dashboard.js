@@ -6,11 +6,8 @@ import AdminSummary from './AdminSummary';
 import AttendanceLogs from './AttendanceLogs';
 
 const Dashboard = () => {
-  const username = localStorage.getItem('username');
-
-let role = 'employee'; // default to employee
-if (username === '222') role = 'manager';
-else if (username === '999') role = 'admin';
+const username = localStorage.getItem("username");
+const role = localStorage.getItem("role"); // ✅ MUST use stored role
 
   const [activeTab, setActiveTab] = useState(
     role === 'employee' ? 'leave' : role === 'manager' ? 'view_leave' : 'summary'
