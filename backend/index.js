@@ -8,20 +8,26 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://attendance-tracker-lac.vercel.app',
   'https://attendance-tracker-git-main-working-saibandi1234s-projects.vercel.app',
-  'https://attendance-tracker-cg1o8xpjm-saibandi1234s-projects.vercel.app'
+  'https://attendance-tracker-cg1o8xpjm-saibandi1234s-projects.vercel.app',
+  'https://attendance-tracker-gnvxf35ck-saibandi1234s-projects.vercel.app'
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
+// ✅ CORS configuration (safe for preflight + production)
+const corsOptions = {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log(`❌ BLOCKED ORIGIN: ${origin}`);
-      callback(new Error('CORS not allowed'));
+      console.warn(`❌ BLOCKED ORIGIN: ${origin}`);
+      callback(null, false); // Don't crash the server
     }
   },
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // ------------------- In-Memory Data -------------------
