@@ -11,6 +11,7 @@ const allowedOrigins = [
   'https://attendance-tracker-cg1o8xpjm-saibandi1234s-projects.vercel.app',
   'https://attendance-tracker-gnvxf35ck-saibandi1234s-projects.vercel.app',
   'https://attendance-tracker-j7ccxbx8b-saibandi1234s-projects.vercel.app'
+  'https://attendance-tracker-h8upz7s4a-saibandi1234s-projects.vercel.app'
 ];
 
 // ✅ CORS configuration (safe for preflight + production)
