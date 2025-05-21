@@ -3,32 +3,23 @@ import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState('');
+
+  const handleLogin = (role) => {
+    setIsLoggedIn(true);
+    setUserRole(role);
+  };
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/attendance" element={<Attendance />} />
-        <Route path="/dashboard/leave" element={<LeaveRequest />} />
-      </Routes>
-    </Router>
+    <div>
+      {!isLoggedIn ? (
+        <LoginPage onLogin={handleLogin} />
+      ) : (
+        <Dashboard role={userRole} />
+      )}
+    </div>
   );
-}
-import React, { useState } from 'react';
-import LoginPage from './components/LoginPage';
-import Dashboard from './components/Dashboard';
-import LoginPage from './components/LoginPage';
-import Dashboard from './components/Dashboard';
-
-function App() {
-  const username = localStorage.getItem('username');
-  const role = localStorage.getItem('role');
-  const path = window.location.pathname;
-
-  if (!username || !role) {
-    return <LoginPage />;
-  }
-
-  return <Dashboard />;
 }
 
 export default App;
