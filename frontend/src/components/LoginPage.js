@@ -1,37 +1,38 @@
-import React, { useState } from 'react';
-import Dashboard from './Dashboard';
+import React, { useState } from "react";
+import Dashboard from "./Dashboard";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [role, setRole] = useState('');
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-const handleLogin = () => {
-  if (!role || !username) {
-    alert("Please select a role and enter an ID");
-    return;
-  }
+  const handleLogin = (e) => {
+    e.preventDefault();
 
-  // Admin access restriction
-  if (role === 'admin' && username !== '2803') {
-    alert("Admin must use ID 2803");
-    return;
-  }
+    if (!role || !username) {
+      alert("Please select a role and enter your ID");
+      return;
+    }
 
-localStorage.setItem("role", role);
-localStorage.setItem("username", username);
-window.location.reload();
-};
+    if (role === "admin" && username !== "2803") {
+      alert("Admin must use ID 2803");
+      return;
+    }
+
+    localStorage.setItem("username", username);
+    localStorage.setItem("role", role);
+    setIsLoggedIn(true);
+  };
 
   if (isLoggedIn) return <Dashboard />;
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-300 to-blue-300 flex items-center justify-center">
-      <div className="bg-white shadow-md p-8 rounded-xl w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+      <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Select Role</label>
+            <label className="block mb-1">Select Role</label>
             <select
               className="border p-2 rounded w-full"
               value={role}
@@ -44,23 +45,17 @@ window.location.reload();
               <option value="admin">Admin</option>
             </select>
           </div>
-
           <div>
-            <label className="block text-sm font-medium mb-1">Enter ID</label>
+            <label className="block mb-1">Enter ID</label>
             <input
               type="text"
-              placeholder="Enter your ID"
+              className="border p-2 rounded w-full"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="border p-2 rounded w-full"
               required
             />
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
-          >
+          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded w-full">
             Login
           </button>
         </form>
