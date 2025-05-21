@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const LeaveRequestForm = () => {
+const LeaveRequestFormClean = () => {
   const [formData, setFormData] = useState({
     emp_id: '',
     start_date: '',
@@ -16,54 +16,51 @@ const LeaveRequestForm = () => {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const { emp_id, start_date, end_date, reason } = formData;
 
+    console.log("📤 Sending this data:", JSON.stringify(formData, null, 2));
+
     if (!emp_id || !start_date || !end_date || !reason) {
-      alert('❌ Failed: Missing required fields');
+      alert('❌ Missing required fields');
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/leave_requests', {
+      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ emp_id, start_date, end_date, reason })
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        alert('✅ Leave request submitted successfully');
+        alert('✅ Leave request submitted!');
         setFormData({ emp_id, start_date: '', end_date: '', reason: '' });
       } else {
         alert(`❌ Failed: ${result.error || 'Unknown error'}`);
       }
-    } catch (error) {
-      console.error('Submission error:', error);
-      alert('❌ Submission failed due to server error');
+    } catch (err) {
+      console.error("Submission error:", err);
+      alert('❌ Server error during submission');
     }
   };
 
   return (
-    <div>
-      <h2>Leave Request Form</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="date" name="start_date" value={formData.start_date} onChange={handleChange} />
-        <input type="date" name="end_date" value={formData.end_date} onChange={handleChange} />
-        <input type="text" name="reason" value={formData.reason} onChange={handleChange} placeholder="Reason" />
-        <button type="submit">Submit Leave</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input type="date" name="start_date" onChange={handleChange} value={formData.start_date} />
+      <input type="date" name="end_date" onChange={handleChange} value={formData.end_date} />
+      <input type="text" name="reason" onChange={handleChange} value={formData.reason} placeholder="Reason" />
+      <button type="submit">Submit Leave</button>
+    </form>
   );
 };
 
-export default LeaveRequestForm;
+export default LeaveRequestFormClean;
+

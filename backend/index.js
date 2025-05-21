@@ -1,11 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const cors = require('cors');  // ✅ 1. Import cors
+
 const app = express();
 
-const cors = require('cors');
+// ✅ 2. Enable cors for all origins
 app.use(cors());
 
+app.use(express.json());
+
+// Your routes follow
 app.use(cors({
   origin: (origin, callback) => {
     if (
@@ -102,7 +107,7 @@ app.get('/api/admin/employees', (req, res) => {
 });
 
 // ------------------- Start Server -------------------
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`✅ Server running on port ${port}`));
 
 
