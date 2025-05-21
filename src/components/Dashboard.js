@@ -26,7 +26,7 @@ const Dashboard = () => {
         <p>No employee view. Your role is: {role}</p>
       )}
 import React, { useState } from 'react';
-import LeaveRequestForm from './LeaveRequestForm';
+import LeaveRequestFormClean from './LeaveRequestFormClean';
 import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
@@ -55,7 +55,7 @@ const Dashboard = () => {
           <button onClick={() => setActiveTab('attendance')}>Clock In/Out</button>
           <button onClick={() => setActiveTab('leave')}>Leave Request</button>
           {activeTab === 'attendance' && <AttendanceForm />}
-          {activeTab === 'leave' && <LeaveRequestForm />}
+          {activeTab === 'leave' && <LeaveRequestFormClean />
           <AttendanceLogs />
         </>
       )}
