@@ -3,6 +3,7 @@ import LeaveRequestForm from './LeaveRequestForm';
 import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
+import AttendanceLogs from './AttendanceLogs';
 
 const Dashboard = () => {
   const username = localStorage.getItem('username');
@@ -40,9 +41,15 @@ const Dashboard = () => {
 
       <button onClick={() => window.location.reload()}>Logout</button>
 
+      {/* Conditional rendering by role and tab */}
       {role === 'employee' && activeTab === 'leave' && <LeaveRequestForm />}
       {role === 'employee' && activeTab === 'attendance' && <AttendanceForm />}
-      {role === 'manager' && activeTab === 'view_leave' && <ViewAllLeaveRequests />}
+      {role === 'manager' && activeTab === 'view_leave' && (
+        <>
+          <ViewAllLeaveRequests />
+          <AttendanceLogs employeeId={222} /> {/* ✅ Show logs here */}
+        </>
+      )}
       {role === 'admin' && activeTab === 'summary' && <AdminSummary />}
     </div>
   );
