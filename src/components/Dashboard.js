@@ -4,6 +4,8 @@ import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
 import AttendanceLogs from './AttendanceLogs';
+// ...
+<AttendanceLogs />
 
 const Dashboard = () => {
   const username = localStorage.getItem("username");

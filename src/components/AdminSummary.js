@@ -10,9 +10,9 @@ const AdminSummary = () => {
   });
 
   useEffect(() => {
-    fetch('https://attendance-backend-vcna.onrender.com/api/attendance')
-      .then((res) => res.json())
-      .then((data) => {
+fetch('https://attendance-backend-vcna.onrender.com/api/employees')
+  .then((res) => res.json())
+  .then((data) => setEmployeeCount(data.length))
         const uniqueEmpIds = new Set(data.map((entry) => entry.employee_id));
         setEmployeeCount(uniqueEmpIds.size);
       })
