@@ -9,6 +9,11 @@ const LeaveRequestForm = () => {
     e.preventDefault();
     const empId = localStorage.getItem("username");
 
+    if (!empId) {
+      alert("⚠️ Login required. Please log in again.");
+      return;
+    }
+
     const payload = {
       employee_id: empId,
       start_date: startDate,
