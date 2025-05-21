@@ -7,35 +7,37 @@ const LeaveRequestForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const empId = localStorage.getItem("username");
 
     const payload = {
-      employee_id: localStorage.getItem('username'),
+      employee_id: empId,
       start_date: startDate,
       end_date: endDate,
-      reason,
-      status: 'pending'
+      reason: reason,
+      status: "pending"
     };
 
     try {
-      const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      const response = await fetch("https://attendance-backend-vcna.onrender.com/api/leave_requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
       });
 
       if (response.ok) {
-        alert('✅ Leave request submitted');
+        alert("✅ Leave request submitted!");
         setStartDate('');
         setEndDate('');
         setReason('');
       } else {
         const errorText = await response.text();
-        console.error('❌ Backend error:', errorText);
-        alert('❌ Failed to submit leave request');
+        alert(`❌ Failed: ${errorText}`);
       }
     } catch (error) {
-      console.error('⚠️ Error:', error);
-      alert('⚠️ Error while submitting leave');
+      console.error("Error submitting leave request:", error);
+      alert("⚠️ Something went wrong while submitting leave");
     }
   };
 
@@ -44,7 +46,7 @@ const LeaveRequestForm = () => {
       <h3 className="text-xl font-semibold mb-4">Leave Request Form</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Start Date</label>
+          <label>Start Date</label>
           <input
             type="date"
             value={startDate}
@@ -54,7 +56,7 @@ const LeaveRequestForm = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">End Date</label>
+          <label>End Date</label>
           <input
             type="date"
             value={endDate}
@@ -64,7 +66,7 @@ const LeaveRequestForm = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Reason</label>
+          <label>Reason</label>
           <input
             type="text"
             value={reason}
@@ -73,10 +75,7 @@ const LeaveRequestForm = () => {
             className="border p-2 rounded w-full"
           />
         </div>
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-2"
-        >
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           Submit
         </button>
       </form>
