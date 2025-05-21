@@ -1,26 +1,51 @@
 import React, { useEffect, useState } from 'react';
 
 const AdminSummary = () => {
-  const [summary, setSummary] = useState({});
-
-  const fetchSummary = async () => {
-    const res = await fetch('https://attendance-backend-vcna.onrender.com/api/admin/summary');
-    const data = await res.json();
-    setSummary(data);
-  };
+  const [employeeCount, setEmployeeCount] = useState(0);
+  const [leaveStats, setLeaveStats] = useState({
+    total: 0,
+    approved: 0,
+    pending: 0,
+    rejected: 0,
+  });
 
   useEffect(() => {
-    fetchSummary();
+    fetch('https://attendance-backend-vcna.onrender.com/api/attendance')
+      .then((res) => res.json())
+      .then((data) => {
+        const uniqueEmpIds = new Set(data.map((entry) => entry.employee_id));
+        setEmployeeCount(uniqueEmpIds.size);
+      })
+      .catch((err) => console.error("Error fetching attendance logs:", err));
+  }, []);
+
+  useEffect(() => {
+    fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests')
+      .then((res) => res.json())
+      .then((data) => {
+        const approved = data.filter((req) => req.status === 'approved').length;
+        const pending = data.filter((req) => req.status === 'pending').length;
+        const rejected = data.filter((req) => req.status === 'rejected').length;
+        setLeaveStats({
+          total: data.length,
+          approved,
+          pending,
+          rejected,
+        });
+      })
+      .catch((err) => console.error("Error fetching leave requests:", err));
   }, []);
 
   return (
-    <div>
-      <h3>Admin Summary</h3>
-      <p>Total Employees: {summary.totalEmployees}</p>
-      <p>Total Leave Requests: {summary.totalLeaveRequests}</p>
-      <p>Approved Leaves: {summary.approvedLeaves}</p>
-      <p>Pending Leaves: {summary.pendingLeaves}</p>
-      <p>Rejected Leaves: {summary.rejectedLeaves}</p>
+    <div className="p-6 bg-white rounded-xl shadow-md mt-6">
+      <h3 className="text-xl font-bold text-purple-800 mb-4">Admin Summary</h3>
+      <ul className="space-y-2 text-gray-700">
+        <li><strong>Total Employees:</strong> {employeeCount}</li>
+        <li><strong>Total Leave Requests:</strong> {leaveStats.total}</li>
+        <li><strong>Approved Leaves:</strong> {leaveStats.approved}</li>
+        <li><strong>Pending Leaves:</strong> {leaveStats.pending}</li>
+        <li><strong>Rejected Leaves:</strong> {leaveStats.rejected}</li>
+      </ul>
     </div>
   );
 };
