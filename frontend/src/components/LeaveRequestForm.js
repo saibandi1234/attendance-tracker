@@ -49,4 +49,21 @@ const LeaveRequestForm = () => {
       }
     } catch (error) {
       console.error('Submission error:', error);
-      alert
+      alert('❌ Submission failed due to server error');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Leave Request Form</h2>
+      <form onSubmit={handleSubmit}>
+        <input type="date" name="start_date" value={formData.start_date} onChange={handleChange} />
+        <input type="date" name="end_date" value={formData.end_date} onChange={handleChange} />
+        <input type="text" name="reason" value={formData.reason} onChange={handleChange} placeholder="Reason" />
+        <button type="submit">Submit Leave</button>
+      </form>
+    </div>
+  );
+};
+
+export default LeaveRequestForm;
