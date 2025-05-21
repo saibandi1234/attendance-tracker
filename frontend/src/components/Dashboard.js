@@ -4,7 +4,6 @@ import AttendanceForm from './AttendanceForm';
 import ViewAllLeaveRequests from './ViewAllLeaveRequests';
 import AdminSummary from './AdminSummary';
 import AttendanceLogs from './AttendanceLogs';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
