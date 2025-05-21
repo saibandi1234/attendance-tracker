@@ -1,22 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const cors = require('cors');  // ✅ 1. Import cors
+const cors = require('cors');
 
 const app = express();
 
-// ✅ 2. Enable cors for all origins
-app.use(cors());
-
-app.use(express.json());
-
-// Your routes follow
+// ✅ Enable CORS for Vercel frontend & localhost
 app.use(cors({
   origin: (origin, callback) => {
     if (
       !origin ||
       origin === 'http://localhost:3000' ||
-      origin === 'https://attendance-tracker.vercel.app' ||
+      origin === 'https://attendance-tracker-lac.vercel.app' ||
       /\.vercel\.app$/.test(origin)
     ) {
       callback(null, true);
@@ -27,6 +21,8 @@ app.use(cors({
   },
   credentials: true,
 }));
+
+app.use(express.json());
 app.use(bodyParser.json());
 
 // ------------------- In-Memory Data -------------------
@@ -67,7 +63,7 @@ app.post('/api/attendance', (req, res) => {
   const { employee_id, log_time, status } = req.body;
   if (!employee_id || !log_time || !status) {
     return res.status(400).send('Missing required fields');
-  }
+ }
   const log = {
     log_id: attendanceLogs.length + 1,
     employee_id,
@@ -109,5 +105,3 @@ app.get('/api/admin/employees', (req, res) => {
 // ------------------- Start Server -------------------
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`✅ Server running on port ${port}`));
-
-
