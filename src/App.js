@@ -15,5 +15,22 @@ function App() {
     </Router>
   );
 }
+import React, { useState } from 'react';
+import LoginPage from './components/LoginPage';
+import Dashboard from './components/Dashboard';
+import LoginPage from './components/LoginPage';
+import Dashboard from './components/Dashboard';
+
+function App() {
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
+  const path = window.location.pathname;
+
+  if (!username || !role) {
+    return <LoginPage />;
+  }
+
+  return <Dashboard />;
+}
 
 export default App;
