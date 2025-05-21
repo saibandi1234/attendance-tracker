@@ -4,11 +4,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
-// ✅ Allow your Vercel deployment + localhost for testing
 const allowedOrigins = [
   'http://localhost:3000',
   'https://attendance-tracker-lac.vercel.app',
-  'https://attendance-tracker-n757dqc1m-saibandi1234s-projects.vercel.app'  // <-- this is your current build
+  'https://attendance-tracker-git-main-working-saibandi1234s-projects.vercel.app',
+  'https://attendance-tracker-cg1o8xpjm-saibandi1234s-projects.vercel.app'
 ];
 
 app.use(cors({
