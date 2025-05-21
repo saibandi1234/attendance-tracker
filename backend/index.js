@@ -1,11 +1,25 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const cors = require('cors');
 const app = express();
+
+// ✅ Allow your Vercel deployment + localhost for testing
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://attendance-tracker-lac.vercel.app',
+  'https://attendance-tracker-n757dqc1m-saibandi1234s-projects.vercel.app'  // <-- this is your current build
+];
+
 app.use(cors({
-  origin: ['https://attendance-tracker-lac.vercel.app', 'https://attendance-tracker-1ssa3oykr-saibandi1234s-projects.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(`❌ BLOCKED ORIGIN: ${origin}`);
+      callback(new Error('CORS not allowed'));
+    }
+  },
   credentials: true
 }));
 app.use(bodyParser.json());
