@@ -5,46 +5,53 @@ const LeaveRequestForm = () => {
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const empId = localStorage.getItem("username");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const empId = localStorage.getItem("username");
 
-    if (!empId) {
-      alert("⚠️ Login required. Please log in again.");
-      return;
-    }
+  if (!empId) {
+    alert("⚠️ Login required. Please log in again.");
+    return;
+  }
 
-    const payload = {
-      employee_id: empId,
-      start_date: startDate,
-      end_date: endDate,
-      reason: reason,
-      status: "pending"
-    };
-
-    try {
-      const response = await fetch("https://attendance-backend-vcna.onrender.com/api/leave_requests", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        alert("✅ Leave request submitted!");
-        setStartDate('');
-        setEndDate('');
-        setReason('');
-      } else {
-        const errorText = await response.text();
-        alert(`❌ Failed: ${errorText}`);
-      }
-    } catch (error) {
-      console.error("Error submitting leave request:", error);
-      alert("⚠️ Something went wrong while submitting leave");
-    }
+  const payload = {
+    employee_id: empId,
+    start_date: startDate,
+    end_date: endDate,
+    reason: reason,
+    status: "pending"
   };
+
+  console.log("🚀 Payload being submitted:", payload);
+
+  if (!payload.employee_id || !payload.start_date || !payload.end_date || !payload.reason) {
+    alert("❌ Cannot submit: one or more fields are missing");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://attendance-backend-vcna.onrender.com/api/leave_requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("✅ Leave request submitted!");
+      setStartDate('');
+      setEndDate('');
+      setReason('');
+    } else {
+      const errorText = await response.text();
+      alert(`❌ Failed: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Error submitting leave request:", error);
+    alert("⚠️ Something went wrong while submitting leave");
+  }
+};
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-md mt-6">
