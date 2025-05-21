@@ -1,35 +1,36 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const cors = require('cors');
+
 const app = express();
 
+// ✅ CORS Setup: allow localhost + all *.vercel.app domains
 const allowedOrigins = [
   'http://localhost:3000',
   'https://attendance-tracker-lac.vercel.app',
-  'https://attendance-tracker-git-main-working-saibandi1234s-projects.vercel.app',
-  'https://attendance-tracker-cg1o8xpjm-saibandi1234s-projects.vercel.app',
-  'https://attendance-tracker-gnvxf35ck-saibandi1234s-projects.vercel.app',
-  'https://attendance-tracker-j7ccxbx8b-saibandi1234s-projects.vercel.app'
-  'https://attendance-tracker-h8upz7s4a-saibandi1234s-projects.vercel.app'
+  'https://attendance-tracker-git-main-working-saibandi1234s-projects.vercel.app'
 ];
 
-// ✅ CORS configuration (safe for preflight + production)
-const corsOptions = {
+app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      /\.vercel\.app$/.test(origin) // ✅ allow all Vercel deployments
+    ) {
       callback(null, true);
     } else {
       console.warn(`❌ BLOCKED ORIGIN: ${origin}`);
-      callback(null, false); // Don't crash the server
+      callback(null, false);
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204
+}));
 
-app.use(cors(corsOptions));
+app.options('*', cors());
 app.use(bodyParser.json());
 
 // ------------------- In-Memory Data -------------------
@@ -112,5 +113,3 @@ app.get('/api/admin/employees', (req, res) => {
 // ------------------- Start Server -------------------
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`✅ Server running on port ${port}`));
-
-
