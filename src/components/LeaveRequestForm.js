@@ -34,10 +34,10 @@ const LeaveRequestForm = () => {
 
     try {
 const response = await fetch('https://attendance-backend-vcna.onrender.com/api/leave_requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(formData),
+});
 
       const result = await response.json();
 
